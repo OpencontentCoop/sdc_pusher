@@ -5,14 +5,32 @@ use Opencontent\Sensor\Api\Values\Post;
 
 class SdcMessageSerializer
 {
-    public function serialize(Post $post, Message $message)
+    public function serialize(Post $post, Message $message, $remoteUserId = null)
     {
-        $visibility = $message instanceof Message\Comment ? 'applicant' : 'internal';
+        $visibility = 'internal';
+        if ($message instanceof Message\Comment || $message instanceof Message\Response){
+            $visibility = 'applicant';
+        }
 
-        return [
-            'message' => $message->richText, //$message->text
+        $prefix = '';
+        $createdAt = $message->published->format('d/m/Y H:i');
+        //$prefix = '[' . $createdAt . ' - ' . $message->creator->name . ']: ';
+        $author = null;
+        if ($post->author->id == $message->creator->id && $remoteUserId){
+//            $prefix = '';
+            $author = $remoteUserId;
+        }
+
+        $data = [
+            'message' => $prefix . $message->richText, //$message->text
             'visibility' => $visibility,
-            'created_at' => $message->published->format('c'),
+            'sent_at' => $message->published->format('c'),
         ];
+
+        if ($author){
+            $data['author_id'] = $author;
+        }
+
+        return $data;
     }
 }

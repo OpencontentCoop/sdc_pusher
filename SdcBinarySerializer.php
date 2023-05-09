@@ -12,8 +12,8 @@ class SdcBinarySerializer
     {
         SensorSdcPusher::debug("Serialize file $file->fileName");
         $upload = [
-            'name' => $file->fileName,
-            'original_filename' => $file->fileName,
+            'name' => $file->fileName ?? $file->filename,
+            'original_filename' => $file->fileName ?? $file->filename,
             'size' => $file->size,
             'protocol_required' => false,
             'mime_type' => $file->mimeType,

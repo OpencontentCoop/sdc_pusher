@@ -11,10 +11,21 @@ class SdcCachedClient
      */
     private $client;
 
+    private $writeOnly = false;
+
     public function __construct(SdcClient $client)
     {
         $this->client = $client;
-        SdcPayload::createSchemaIfNeeded();
+    }
+
+    public function setWriteOnly()
+    {
+        $this->writeOnly = true;
+    }
+
+    public function unsetWriteOnly()
+    {
+        $this->writeOnly = false;
     }
 
     public function clearCache($id = null)
@@ -24,17 +35,22 @@ class SdcCachedClient
 
     private function getCacheItem($id, $type, $callBack)
     {
-        $payload = SdcPayload::fetch($id);
-        if (!$payload instanceof SdcPayload) {
+        $payload = SdcPayload::fetchByIdAndType($id, $type);
+        if (!$payload instanceof SdcPayload || $this->writeOnly) {
             $data = call_user_func($callBack);
             $payload = SdcPayload::create(
-                $id,
+                (string)$id,
                 $type,
                 $data
             );
         }
 
         return $payload->getPayload();
+    }
+
+    public function getCurrentUserId(): ?string
+    {
+        return $this->client->getCurrentUserId();
     }
 
     public function getAccessToken(): ?string
@@ -60,17 +76,31 @@ class SdcCachedClient
         });
     }
 
-    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies"): array
+    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
-        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId) {
-            return $this->client->createApplication($post, $userData, $images, $files, $serviceId);
+        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath) {
+            return $this->client->createApplication($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
         });
     }
 
-    public function createMessage(array $application, Post $post, Message $message)
+    public function createMessage(array $application, Post $post, Message $message, $remoteUserId = null)
     {
-        return $this->getCacheItem($message->id, 'message', function () use ($application, $post, $message) {
-            return $this->client->createMessage($application, $post, $message);
+        return $this->getCacheItem($message->id, 'message', function () use ($application, $post, $message, $remoteUserId) {
+            return $this->client->createMessage($application, $post, $message, $remoteUserId);
+        });
+    }
+
+    public function assign($applicationId, $officeId, $dateTime = null, $operatorId = null)
+    {
+        return $this->getCacheItem($applicationId, 'assign', function () use ($applicationId, $officeId, $dateTime, $operatorId) {
+            return $this->client->assign($applicationId, $officeId, $dateTime, $operatorId);
+        });
+    }
+
+    public function accept($applicationId, $message)
+    {
+        return $this->getCacheItem($applicationId, 'accept', function () use ($applicationId, $message) {
+            return $this->client->accept($applicationId, $message);
         });
     }
 }

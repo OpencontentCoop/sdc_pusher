@@ -1,5 +1,5 @@
 <?php
-
+// create table sdc_payload_qa as (select * from sdc_payload);
 class SdcPayload extends eZPersistentObject
 {
     public static function definition()
@@ -101,9 +101,18 @@ class SdcPayload extends eZPersistentObject
         return $item instanceof SdcPayload ? $item : null;
     }
 
+    public static function fetchByIdAndType($id, $type): ?SdcPayload
+    {
+        $item = eZPersistentObject::fetchObject(self::definition(), null, ['id' => $id, 'type' => $type]);
+        return $item instanceof SdcPayload ? $item : null;
+    }
+
     public static function create(string $id, string $type, array $payload, int $priority = 0): SdcPayload
     {
         $item = new SdcPayload();
+        if (mb_strlen($id) > 255){
+            $id = substr($id, 0, 255);
+        }
         $item->setAttribute('id', $id);
         $item->setAttribute('priority', $priority);
         $item->setAttribute('type', $type);
