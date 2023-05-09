@@ -52,6 +52,11 @@ class SensorSdcPusher
         self::$debug = true;
     }
 
+    public static function disableDebug(): void
+    {
+        self::$debug = false;
+    }
+
     private function __construct(string $baseUri, string $username, string $password)
     {
         if (self::$useCache) {
@@ -73,27 +78,31 @@ class SensorSdcPusher
         return $this->client->getAccessToken();
     }
 
-    public function push(Post $post, string $serviceId = "inefficiencies"): array
+    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true): array
     {
         SensorSdcPusher::debug("Working on post $post->id", false);
         $userData = $this->pushUser($post->author);
 
         $imagesData = [];
-        foreach ($post->images as $image) {
-            $imagesData[] = $this->pushBinary($image);
-        }
         $filesData = [];
-        foreach ($post->files as $file) {
-            $filesData[] = $this->pushBinary($file);
+        if ($pushBinaries) {
+            foreach ($post->images as $image) {
+                $imagesData[] = $this->pushBinary($image);
+            }
+            foreach ($post->files as $file) {
+                $filesData[] = $this->pushBinary($file);
+            }
         }
 
         $data = $this->client->createApplication($post, $userData, $imagesData, $filesData, $serviceId);
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
 
-//        foreach ($post->comments as $message){
-//            $this->pushMessage($data, $post, $message);
-//        }
-//
+        if ($pushComments) {
+            foreach ($post->comments as $message) {
+                $this->pushMessage($data, $post, $message);
+            }
+        }
+
 //        foreach ($post->privateMessages as $message){
 //            $this->pushMessage($data, $post, $message);
 //        }

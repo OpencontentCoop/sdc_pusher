@@ -77,6 +77,8 @@ class SdcClient
         $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId);
 
         SensorSdcPusher::debug("Create application $post->id");
+        SensorSdcPusher::debug(json_encode($data));
+
         $response = (string)$this->client->request(
             'POST',
             $this->apiUri . '/applications',
@@ -162,7 +164,12 @@ class SdcClient
 
         $fileInfo = json_decode($response, true);
         $fileContents = file_get_contents($handler->filePath);
-
+        $size = $handler->size();
+        if (mb_strlen($fileContents) === 0){
+            SensorSdcPusher::debug("Error: invalid file contents for file {$handler->filePath}");
+            $fileContents = '[File not found]';
+            $size = mb_strlen($fileContents);
+        }
         SensorSdcPusher::debug("Put file to " . $fileInfo['uri']);
         $curl = curl_init();
         $curlOptions = [
@@ -174,13 +181,13 @@ class SdcClient
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 300,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_INFILESIZE => $handler->size(),
+            CURLOPT_INFILESIZE => $size,
             CURLOPT_HTTPHEADER => [
                 "Accept: */*",
                 "Accept-Encoding: gzip, deflate",
                 "Cache-Control: no-cache",
                 "Connection: keep-alive",
-                "Content-Length: " . $handler->size(),
+                "Content-Length: " . $size,
                 "Content-Type: multipart/form-data"
             ],
         ];
@@ -229,6 +236,7 @@ class SdcClient
 
         $messageType = get_class($message);
         SensorSdcPusher::debug("Create message ($messageType) $message->id");
+        SensorSdcPusher::debug(json_encode($data));
         $response = (string)$this->client->request(
             'POST',
             $this->apiUri . '/applications/' . $application['id'] . '/messages',

@@ -4,6 +4,11 @@ use Opencontent\Sensor\Api\Values\Post;
 
 class SdcPostSerializer
 {
+    public static function serializaPdfDirectory($post)
+    {
+        return hash_hmac('sha256', $post->id, eZSolr::installationID());
+    }
+
     public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies"): array
     {
         $mapMicroMacro = [
@@ -975,6 +980,17 @@ class SdcPostSerializer
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
         ];
+
+        $status = "1900";
+        if ($post->status->identifier === 'close'){
+            $status = "7000";
+        }
+        if ($post->status->identifier === 'pending'){
+            $status = "1900";
+        }
+        if ($post->status->identifier === 'open'){
+            $status = "400";
+        }
 
         $data = [
             "service" => $serviceId,
