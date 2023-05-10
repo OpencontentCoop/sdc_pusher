@@ -60,10 +60,10 @@ class SdcCachedClient
         });
     }
 
-    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
+    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null, $officeId = null): array
     {
-        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath) {
-            return $this->client->createApplication($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
+        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath, $officeId) {
+            return $this->client->createApplication($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath, $officeId);
         });
     }
 

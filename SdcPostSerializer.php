@@ -9,7 +9,7 @@ class SdcPostSerializer
         return hash_hmac('sha256', $post->id, eZSolr::installationID());
     }
 
-    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
+    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null, $officeId = null): array
     {
         $mapMicroMacro = [
             [
@@ -991,12 +991,12 @@ class SdcPostSerializer
             $status = "1900";
         }
         if ($post->status->identifier === 'open'){
-            $status = "400";
+            $status = "4000";
         }
 
         $data = [
             "service" => $serviceId,
-            "status" => "1900",
+            "status" => $status,
             "data" => [
                 "applicant" => [
                     "data" => [
@@ -1024,8 +1024,10 @@ class SdcPostSerializer
         ];
 
         if ($microMacro){
-            $data["micromacrocategory.label"] = $microMacro;
-            $data["micromacrocategory.value"] = $mapMicroMacroHash[$microMacro] ?? '';
+            $data['data']["micromacrocategory"] = [
+                "label" => $microMacro,
+                "value" => $mapMicroMacroHash[$microMacro] ?? ''
+            ];
         }
 
         if (!empty($images)){
@@ -1040,6 +1042,9 @@ class SdcPostSerializer
                 "lon" => $post->geoLocation->longitude,
                 "display_name" => $post->geoLocation->address,
             ];
+        }
+        if (!empty($officeId)){
+            $data['user_group_id'] = $officeId;
         }
 
         return $data;

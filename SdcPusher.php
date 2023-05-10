@@ -78,7 +78,7 @@ class SensorSdcPusher
         return $this->client->getAccessToken();
     }
 
-    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null): array
+    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null, $officeId = null): array
     {
         SensorSdcPusher::debug("Working on post $post->id", false);
         $userData = $this->pushUser($post->author);
@@ -94,7 +94,7 @@ class SensorSdcPusher
             }
         }
 
-        $data = $this->client->createApplication($post, $userData, $imagesData, $filesData, $serviceId, $pdfFileRelativePath);
+        $data = $this->client->createApplication($post, $userData, $imagesData, $filesData, $serviceId, $pdfFileRelativePath, $officeId);
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
 
         if ($pushComments) {

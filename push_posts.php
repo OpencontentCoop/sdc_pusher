@@ -17,14 +17,14 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][s:|service:][only-closed][no-comments][no-files][limit:][offset:][dry-run]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:]',
     '',
     [
         'id' => 'Filter by post id',
         'only-closed' => 'Push only closed',
         'clear' => 'Clear table cache before run',
         'no-comments' => 'Skip pushing comments',
-        'no-files' => 'Skip pushing files and images'
+        'no-files' => 'Skip pushing files and images',
     ]
 );
 $script->initialize();
@@ -38,6 +38,7 @@ $username = $options['username'];
 $password = $options['password'];
 $debug = $options['verbose'];
 $serviceId = $options['service'] ?? "inefficiencies";
+$officeId = $options['office'];
 $limit = (int)$options['limit'];
 $offset = (int)$options['offset'];
 
@@ -58,10 +59,10 @@ try {
 
     $closeStateIdList = $openStateIdList = [];
     $states = $repository->getSensorPostStates('sensor');
-    foreach ($states as $state){
-        if ($state->attribute('identifier') === 'close'){
+    foreach ($states as $state) {
+        if ($state->attribute('identifier') === 'close') {
             $closeStateIdList[] = $state->attribute('id');
-        }else{
+        } else {
             $openStateIdList[] = $state->attribute('id');
         }
     }
@@ -83,10 +84,13 @@ try {
             ['published' => 'asc'],
             $limits,
             null,
-        false,
+            false,
             ['contentobject_state_id'],
             ['ezcobj_state_link'],
-            ' AND ezcobj_state_link.contentobject_id = ezcontentobject.id and ezcobj_state_link.contentobject_state_id in (' . implode(',', $filterStateIdList) . ')'
+            ' AND ezcobj_state_link.contentobject_id = ezcontentobject.id and ezcobj_state_link.contentobject_state_id in (' . implode(
+                ',',
+                $filterStateIdList
+            ) . ')'
         );
     }
     $objectsCount = count($objects);
@@ -116,16 +120,21 @@ try {
         }
 
         $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
-        $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/'. $post->id . '.pdf';
+        $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
         $pdfFilePath = __DIR__ . $pdfFileRelativePath;
         if ($debug) {
             $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath");
         }
-        $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -q --id=' . $post->id);
-        eZDir::mkdir(__DIR__ . $pdfFilePath, false, true);
-        file_put_contents($pdfFilePath, $pdf);
+        if (!file_exists($pdfFilePath)) {
+//          $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id);
+            $pdf = shell_exec(
+                'php /mnt/efs/cluster-openpa/migration/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id
+            );
+            eZDir::mkdir(dirname($pdfFilePath), false, true);
+            file_put_contents($pdfFilePath, $pdf);
+        }
         if (!$options['dry-run']) {
-            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath);
+            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath, $officeId);
         }
         $stats++;
 

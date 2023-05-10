@@ -9,8 +9,9 @@ class SdcMessageSerializer
     {
         $visibility = $message instanceof Message\Comment ? 'applicant' : 'internal';
 
+        $prefix = '[' . $message->creator->name . '] ';
         return [
-            'message' => $message->richText, //$message->text
+            'message' => $prefix . $message->richText, //$message->text
             'visibility' => $visibility,
             'created_at' => $message->published->format('c'),
         ];
