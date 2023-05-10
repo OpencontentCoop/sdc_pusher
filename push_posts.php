@@ -116,15 +116,16 @@ try {
         }
 
         $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
-        $pdfFilePath = __DIR__ . '/pdf/' . $pdfDirectory . '/'. $post->id . '.pdf';
+        $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/'. $post->id . '.pdf';
+        $pdfFilePath = __DIR__ . $pdfFileRelativePath;
         if ($debug) {
             $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath");
         }
         $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -q --id=' . $post->id);
-        eZDir::mkdir(__DIR__ . '/pdf/' . $pdfDirectory, false, true);
+        eZDir::mkdir(__DIR__ . $pdfFilePath, false, true);
         file_put_contents($pdfFilePath, $pdf);
         if (!$options['dry-run']) {
-            $pusher->push($post, $serviceId, $pushComments, $pushBinaries);
+            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath);
         }
         $stats++;
 

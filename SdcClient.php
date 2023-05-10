@@ -72,9 +72,9 @@ class SdcClient
         return self::$token;
     }
 
-    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies"): array
+    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
-        $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId);
+        $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
 
         SensorSdcPusher::debug("Create application $post->id");
         SensorSdcPusher::debug(json_encode($data));

@@ -9,7 +9,7 @@ class SdcPostSerializer
         return hash_hmac('sha256', $post->id, eZSolr::installationID());
     }
 
-    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies"): array
+    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
         $mapMicroMacro = [
             [
@@ -974,12 +974,14 @@ class SdcPostSerializer
             'submitted_at' => $post->published->format('c'),
             'created_at' => $post->published->format('c'),
             'modified_at' => $post->modified->format('c'),
-            'pdf_link' => '/sensor/posts/' . $post->id . '/pdf', // dominio?,
             'sensor_category' => $post->categories > 0 ? $post->categories[0]->name : null,
             'sensor_area' => $post->areas > 0 ? $post->areas[0]->name : null,
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
         ];
+        if (!empty($pdfFileRelativePath)){
+           $missing['pdf_link'] = 'https://archivio-segnalazioni.comune.genova.it' . $pdfFileRelativePath;
+        }
 
         $status = "1900";
         if ($post->status->identifier === 'close'){
