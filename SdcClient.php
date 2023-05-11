@@ -282,7 +282,7 @@ class SdcClient
     {
         $data = [
             'user_group_id' => $officeId,
-            'user_id' => $operatorId,
+//            'user_id' => $operatorId,
         ];
         SensorSdcPusher::debug("Assign $applicationId to group $officeId and operator $operatorId");
         SensorSdcPusher::debug(json_encode($data));
