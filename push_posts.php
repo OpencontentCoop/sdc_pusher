@@ -115,7 +115,8 @@ try {
             $progressBar->advance();
         }else{
             $cli->output();
-            $cli->warning("$index/$objectsCount " . $object['id']);
+            $i = $index + 1;
+            $cli->warning("$i/$objectsCount Post #" . $object['id']);
         }
 
         try {
