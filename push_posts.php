@@ -113,6 +113,9 @@ try {
     foreach ($objects as $index => $object) {
         if (!$debug) {
             $progressBar->advance();
+        }else{
+            $cli->output();
+            $cli->warning("$index/$objectsCount " . $object['id']);
         }
 
         try {
@@ -126,7 +129,7 @@ try {
         $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
         $pdfFilePath = __DIR__ . $pdfFileRelativePath;
         if ($debug) {
-            $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath");
+            $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
         }
         if (!file_exists($pdfFilePath)) {
 //          $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id);
@@ -135,6 +138,9 @@ try {
             );
             eZDir::mkdir(dirname($pdfFilePath), false, true);
             file_put_contents($pdfFilePath, $pdf);
+            $cli->warning('stored');
+        }else{
+            $cli->output('already stored');
         }
         if (!$options['dry-run']) {
             $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath, $officeId, $operatorId);
