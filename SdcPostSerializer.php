@@ -9,7 +9,7 @@ class SdcPostSerializer
         return hash_hmac('sha256', $post->id, eZSolr::installationID());
     }
 
-    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null, $officeId = null): array
+    public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
         $mapMicroMacro = [
             [
@@ -982,16 +982,16 @@ class SdcPostSerializer
            $missing['pdf_link'] = 'https://archivio-segnalazioni.comune.genova.it' . $pdfFileRelativePath;
         }
 
-        $status = "1900";
-        if ($post->status->identifier === 'close'){
-            $status = "7000";
-        }
-        if ($post->status->identifier === 'pending'){
-            $status = "1900";
-        }
-        if ($post->status->identifier === 'open'){
-            $status = "4000";
-        }
+        $status = $post->status->identifier === 'pending' ? "1900" : "2000";
+//        if ($post->status->identifier === 'close'){
+//            $status = "7000";
+//        }
+//        if ($post->status->identifier === 'pending'){
+//            $status = "1900";
+//        }
+//        if ($post->status->identifier === 'open'){
+//            $status = "4000";
+//        }
 
         $data = [
             "service" => $serviceId,
@@ -1036,15 +1036,14 @@ class SdcPostSerializer
         if (!empty($files)){
             $data["data"]["docs"] = $files;
         }
-        if ($post->geoLocation instanceof Post\Field\GeoLocation){
+        if ($post->geoLocation instanceof Post\Field\GeoLocation
+            && $post->geoLocation->latitude != 0
+            && $post->geoLocation->longitude != 0){
             $data["data"]["address"] = [
                 "lat" => $post->geoLocation->latitude,
                 "lon" => $post->geoLocation->longitude,
                 "display_name" => $post->geoLocation->address,
             ];
-        }
-        if (!empty($officeId)){
-            $data['user_group_id'] = $officeId;
         }
 
         return $data;

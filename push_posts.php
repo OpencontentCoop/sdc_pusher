@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][no-dev]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev]',
     '',
     [
         'id' => 'Filter by post id',
@@ -39,6 +39,7 @@ $password = $options['password'];
 $debug = $options['verbose'];
 $serviceId = $options['service'] ?? "inefficiencies";
 $officeId = $options['office'];
+$operatorId = $options['operator'];
 $limit = (int)$options['limit'];
 $offset = (int)$options['offset'];
 
@@ -136,7 +137,7 @@ try {
             file_put_contents($pdfFilePath, $pdf);
         }
         if (!$options['dry-run']) {
-            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath, $officeId);
+            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath, $officeId, $operatorId);
         }
         $stats++;
 

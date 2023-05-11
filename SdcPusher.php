@@ -80,7 +80,7 @@ class SensorSdcPusher
         return $this->client->getAccessToken();
     }
 
-    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null, $officeId = null): array
+    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null, $officeId = null, $operatorId = null): array
     {
         $this->currentPost = [
             'application' => null,
@@ -104,10 +104,20 @@ class SensorSdcPusher
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
         $this->currentPost['application'] = $data['id'];
 
+        $needAssign = $post->status->identifier === 'open' ||  $post->status->identifier === 'close' || $post->comments->count() > 0;
+        if ($needAssign){
+            $data = $this->client->assign($data['id'], $officeId, $operatorId);
+        }
+
         if ($pushComments) {
             foreach ($post->comments as $message) {
                 $this->pushMessage($data, $post, $message);
             }
+        }
+
+        if ($post->status->identifier === 'close'){
+            $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
+            $data = $this->client->accept($data['id'], $message);
         }
 
 //        foreach ($post->privateMessages as $message){

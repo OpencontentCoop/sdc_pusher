@@ -50,6 +50,11 @@ class SdcClient
         $this->messageSerializer = new SdcMessageSerializer();
     }
 
+    public function getCurrentUserId(): ?string
+    {
+        return false; // @see https://gitlab.com/opencontent/stanza-del-cittadino/core/-/issues/1637
+    }
+
     public function getAccessToken(): ?string
     {
         if (self::$token === null) {
@@ -72,9 +77,9 @@ class SdcClient
         return self::$token;
     }
 
-    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null, $officeId = null): array
+    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
-        $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath, $officeId);
+        $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
 
         SensorSdcPusher::debug("Create application $post->id");
         SensorSdcPusher::debug(json_encode($data));
@@ -271,5 +276,48 @@ class SdcClient
         }
 
         return false;
+    }
+
+    public function assign($applicationId, $officeId, $operatorId)
+    {
+        $data = [
+            'user_group_id' => $officeId,
+            'user_id' => $operatorId,
+        ];
+        SensorSdcPusher::debug("Assign $applicationId to group $officeId and operator $operatorId");
+        SensorSdcPusher::debug(json_encode($data));
+        $response = (string)$this->client->request(
+            'POST',
+            $this->apiUri . '/applications/' . $applicationId . '/transition/assign',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                ],
+                'json' => $data,
+            ]
+        )->getBody();
+
+        return json_decode($response, true);
+    }
+
+    public function accept($applicationId, $message)
+    {
+        $data = [
+            'message' => $message
+        ];
+        SensorSdcPusher::debug("Accept $applicationId");
+        SensorSdcPusher::debug(json_encode($data));
+        $response = (string)$this->client->request(
+            'POST',
+            $this->apiUri . '/applications/' . $applicationId . '/transition/accept',
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                ],
+                'json' => $data,
+            ]
+        )->getBody();
+
+        return json_decode($response, true);
     }
 }

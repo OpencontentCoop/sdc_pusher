@@ -37,6 +37,11 @@ class SdcCachedClient
         return $payload->getPayload();
     }
 
+    public function getCurrentUserId(): ?string
+    {
+        return $this->client->getCurrentUserId();
+    }
+
     public function getAccessToken(): ?string
     {
         return $this->client->getAccessToken();
@@ -60,10 +65,10 @@ class SdcCachedClient
         });
     }
 
-    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null, $officeId = null): array
+    public function createApplication(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
-        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath, $officeId) {
-            return $this->client->createApplication($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath, $officeId);
+        return $this->getCacheItem($post->id, 'post', function () use ($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath) {
+            return $this->client->createApplication($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
         });
     }
 
@@ -71,6 +76,20 @@ class SdcCachedClient
     {
         return $this->getCacheItem($message->id, 'message', function () use ($application, $post, $message, $remoteUserId) {
             return $this->client->createMessage($application, $post, $message, $remoteUserId);
+        });
+    }
+
+    public function assign($applicationId, $officeId, $operatorId)
+    {
+        return $this->getCacheItem($applicationId, 'assign', function () use ($applicationId, $officeId, $operatorId) {
+            return $this->client->assign($applicationId, $officeId, $operatorId);
+        });
+    }
+
+    public function accept($applicationId, $message)
+    {
+        return $this->getCacheItem($applicationId, 'accept', function () use ($applicationId, $message) {
+            return $this->client->accept($applicationId, $message);
         });
     }
 }

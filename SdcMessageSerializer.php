@@ -11,7 +11,7 @@ class SdcMessageSerializer
 
         $prefix = '[' . $message->creator->name . '] ';
         $author = null;
-        if ($post->author->id != $message->creator->id && $remoteUserId){
+        if ($post->author->id == $message->creator->id && $remoteUserId){
             $prefix = '';
             $author = $remoteUserId;
         }
