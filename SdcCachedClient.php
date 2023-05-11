@@ -67,10 +67,10 @@ class SdcCachedClient
         });
     }
 
-    public function createMessage(array $application, Post $post, Message $message)
+    public function createMessage(array $application, Post $post, Message $message, $remoteUserId = null)
     {
-        return $this->getCacheItem($message->id, 'message', function () use ($application, $post, $message) {
-            return $this->client->createMessage($application, $post, $message);
+        return $this->getCacheItem($message->id, 'message', function () use ($application, $post, $message, $remoteUserId) {
+            return $this->client->createMessage($application, $post, $message, $remoteUserId);
         });
     }
 }

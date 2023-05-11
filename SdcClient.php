@@ -225,9 +225,9 @@ class SdcClient
         ];
     }
 
-    public function createMessage(array $application, Post $post, Message $message)
+    public function createMessage(array $application, Post $post, Message $message, $remoteUserId = null)
     {
-        $data = $this->messageSerializer->serialize($post, $message);
+        $data = $this->messageSerializer->serialize($post, $message, $remoteUserId);
 
         // soft workaround per errore 500 ma messaggio creato
         if ($response = $this->getMessageByText($application['id'], $data['message'])) {

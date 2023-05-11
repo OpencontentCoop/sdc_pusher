@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][no-dev]',
     '',
     [
         'id' => 'Filter by post id',
@@ -45,7 +45,9 @@ $offset = (int)$options['offset'];
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);
-    $pusher::enableDevMode();
+    if (!$options['no-dev']) {
+        $pusher::enableDevMode();
+    }
     if ($debug) {
         $pusher::enableDebug();
     }

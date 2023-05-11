@@ -16,6 +16,8 @@ class SensorSdcPusher
 
     public static $useCache = true;
 
+    private $currentPost;
+
     public static function instance(string $baseUri, string $username, string $password): SensorSdcPusher
     {
         if (self::$instance === null) {
@@ -80,6 +82,10 @@ class SensorSdcPusher
 
     public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null, $officeId = null): array
     {
+        $this->currentPost = [
+            'application' => null,
+            'user' => null,
+        ];
         SensorSdcPusher::debug("Working on post $post->id", false);
         $userData = $this->pushUser($post->author);
 
@@ -96,6 +102,7 @@ class SensorSdcPusher
 
         $data = $this->client->createApplication($post, $userData, $imagesData, $filesData, $serviceId, $pdfFileRelativePath, $officeId);
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
+        $this->currentPost['application'] = $data['id'];
 
         if ($pushComments) {
             foreach ($post->comments as $message) {
@@ -114,6 +121,7 @@ class SensorSdcPusher
     {
         $user = $this->client->createUser($user);
         SensorSdcPusher::debug("Remote user id is " . $user['id']);
+        $this->currentPost['user'] = $user['id'];
         return $user;
     }
 
@@ -132,7 +140,7 @@ class SensorSdcPusher
 
     public function pushMessage(array $application, Post $post, Message $message)
     {
-        $message = $this->client->createMessage($application, $post, $message);
+        $message = $this->client->createMessage($application, $post, $message, $this->currentPost['user']);
         SensorSdcPusher::debug("Remote message id is " . $message['id']);
         return $message;
     }

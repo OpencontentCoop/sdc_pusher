@@ -16,10 +16,10 @@ class SdcUserSerializer
         ];
 
         if (SensorSdcPusher::isDevMode()) {
-            $data['nome'] = 'Luca';
-            $data['cognome'] = 'Realdi';
-            $data['email'] = 'lr@opencontent.it';
-            $data['codice_fiscale'] = 'RLDLCU77T05G224F';
+            $data['nome'] = 'Jonas';
+            $data['cognome'] = 'Smith';
+            $data['email'] = 'jonas.smith@email.de';
+            $data['codice_fiscale'] = 'SMTJNS99C01XXXXK';
         }
 
         $data['_source'] = $user;
