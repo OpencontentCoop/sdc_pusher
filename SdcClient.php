@@ -297,7 +297,7 @@ class SdcClient
             ]
         )->getBody();
 
-        return json_decode($response, true);
+        return (array)json_decode($response, true);
     }
 
     public function accept($applicationId, $message)
@@ -318,6 +318,6 @@ class SdcClient
             ]
         )->getBody();
 
-        return json_decode($response, true);
+        return (array)json_decode($response, true);
     }
 }
