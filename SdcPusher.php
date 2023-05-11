@@ -107,6 +107,7 @@ class SensorSdcPusher
         $needAssign = $post->status->identifier === 'open' ||  $post->status->identifier === 'close' || $post->comments->count() > 0;
         if ($needAssign){
             try {
+                sleep(1);
                 $this->client->assign($data['id'], $officeId, $operatorId);
             }catch (Exception $e){
                 SensorSdcPusher::debug("ERROR: " . $e->getMessage());
