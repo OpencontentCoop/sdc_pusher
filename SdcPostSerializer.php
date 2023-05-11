@@ -972,7 +972,6 @@ class SdcPostSerializer
 
         $missing = [
             'submitted_at' => $post->published->format('c'),
-            'created_at' => $post->published->format('c'),
             'modified_at' => $post->modified->format('c'),
             'sensor_category' => $post->categories > 0 ? $post->categories[0]->name : null,
             'sensor_area' => $post->areas > 0 ? $post->areas[0]->name : null,
@@ -997,6 +996,7 @@ class SdcPostSerializer
         $data = [
             "service" => $serviceId,
             "status" => $status,
+            'created_at' => $post->published->format('c'),
             "data" => [
                 "applicant" => [
                     "data" => [
