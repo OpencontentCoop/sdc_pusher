@@ -9,7 +9,8 @@ class SdcMessageSerializer
     {
         $visibility = $message instanceof Message\Comment ? 'applicant' : 'internal';
 
-        $prefix = '[' . $message->creator->name . '] ';
+        $createdAt = $message->published->format('d/m/Y H:i');
+        $prefix = '[' . $createdAt . ' - ' . $message->creator->name . ']: ';
         $author = null;
         if ($post->author->id == $message->creator->id && $remoteUserId){
             $prefix = '';
@@ -19,7 +20,7 @@ class SdcMessageSerializer
         $data = [
             'message' => $prefix . $message->richText, //$message->text
             'visibility' => $visibility,
-            'created_at' => $message->published->format('c'),
+            'sent_at' => $message->published->format('c'),
         ];
 
         if ($author){
