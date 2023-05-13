@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache]',
     '',
     [
         'id' => 'Filter by post id',
@@ -73,8 +73,13 @@ try {
         $pusher::disableDevMode();
     }
 
-    if ($options['clear']) {
+    if ($options['clear-cache']) {
         $cli->warning('Clear internal cache');
+        $pusher->clearCache();
+    }
+
+    if ($options['clear']) {
+        $cli->warning('Clear internal cache for selected id');
         $pusher->clearCache($options['id']);
     }
 

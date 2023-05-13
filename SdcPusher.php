@@ -130,7 +130,11 @@ class SensorSdcPusher
         if ($needAssign){
             try {
                 SensorSdcPusher::debug("Assign to default office if needed");
-                $this->client->assign($data['id'], $officeId, $operatorId);
+                if ($post->status->identifier === 'close') {
+                    $this->client->assign($data['id'], $officeId, $operatorId);
+                }else{
+                    $this->client->assign($data['id'], $officeId);
+                }
             }catch (Exception $e){
                 SensorSdcPusher::debug("ERROR: " . $e->getMessage());
             }
