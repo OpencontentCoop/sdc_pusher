@@ -111,10 +111,14 @@ class SensorSdcPusher
         $filesData = [];
         if ($pushBinaries) {
             foreach ($post->images as $image) {
-                $imagesData[] = $this->pushBinary($image);
+                $imageItem = $this->pushBinary($image);
+                SensorSdcPusher::debug("Image " . $imageItem['originalName']);
+                $imagesData[] = $imageItem;
             }
             foreach ($post->files as $file) {
-                $filesData[] = $this->pushBinary($file);
+                $fileItem = $this->pushBinary($file);
+                SensorSdcPusher::debug("File " . $fileItem['originalName']);
+                $filesData[] = $fileItem;
             }
         }
 
