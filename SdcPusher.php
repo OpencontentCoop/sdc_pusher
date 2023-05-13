@@ -129,7 +129,7 @@ class SensorSdcPusher
         $needAssign = $post->status->identifier === 'open' ||  $post->status->identifier === 'close' || $post->comments->count() > 0;
         if ($needAssign){
             try {
-                sleep(1);
+                SensorSdcPusher::debug("Assign to default office if needed");
                 $this->client->assign($data['id'], $officeId, $operatorId);
             }catch (Exception $e){
                 SensorSdcPusher::debug("ERROR: " . $e->getMessage());
@@ -144,6 +144,7 @@ class SensorSdcPusher
 
         if ($post->status->identifier === 'close'){
             $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
+            SensorSdcPusher::debug("Close if needed");
             $this->client->accept($data['id'], $message);
         }
 
