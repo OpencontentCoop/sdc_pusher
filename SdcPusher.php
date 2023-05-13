@@ -8,6 +8,8 @@ class SensorSdcPusher
 {
     private static $instance;
 
+    private static $verbose;
+
     private static $debug;
 
     private static $devMode = true;
@@ -29,7 +31,7 @@ class SensorSdcPusher
 
     public static function debug($message, $prefix = '  '): void
     {
-        if (self::$debug) {
+        if (self::$verbose) {
             eZCLI::instance()->output($prefix . $message);
         }
     }
@@ -49,6 +51,16 @@ class SensorSdcPusher
         self::$devMode = false;
     }
 
+    public static function enableVerbose(): void
+    {
+        self::$verbose = true;
+    }
+
+    public static function disableVerbose(): void
+    {
+        self::$verbose = false;
+    }
+
     public static function enableDebug(): void
     {
         self::$debug = true;
@@ -57,6 +69,11 @@ class SensorSdcPusher
     public static function disableDebug(): void
     {
         self::$debug = false;
+    }
+
+    public static function isDebugEnable(): bool
+    {
+        return (bool)self::$debug;
     }
 
     private function __construct(string $baseUri, string $username, string $password)

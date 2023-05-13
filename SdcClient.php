@@ -82,7 +82,7 @@ class SdcClient
         $data = $this->postSerializer->serialize($post, $userData, $images, $files, $serviceId, $pdfFileRelativePath);
 
         SensorSdcPusher::debug("Create application $post->id");
-        SensorSdcPusher::debug(json_encode($data));
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
 
         $response = (string)$this->client->request(
             'POST',
@@ -241,7 +241,7 @@ class SdcClient
 
         $messageType = get_class($message);
         SensorSdcPusher::debug("Create message ($messageType) $message->id");
-        SensorSdcPusher::debug(json_encode($data));
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
         $response = (string)$this->client->request(
             'POST',
             $this->apiUri . '/applications/' . $application['id'] . '/messages',
@@ -285,7 +285,7 @@ class SdcClient
 //            'user_id' => $operatorId,
         ];
         SensorSdcPusher::debug("Assign $applicationId to group $officeId and operator $operatorId");
-        SensorSdcPusher::debug(json_encode($data));
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
         $response = (string)$this->client->request(
             'POST',
             $this->apiUri . '/applications/' . $applicationId . '/transition/assign',
@@ -306,7 +306,7 @@ class SdcClient
             'message' => $message
         ];
         SensorSdcPusher::debug("Accept $applicationId");
-        SensorSdcPusher::debug(json_encode($data));
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
         $response = (string)$this->client->request(
             'POST',
             $this->apiUri . '/applications/' . $applicationId . '/transition/accept',

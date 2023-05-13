@@ -36,7 +36,8 @@ $cli = eZCLI::instance();
 $baseUri = $options['baseurl'];
 $username = $options['username'];
 $password = $options['password'];
-$debug = $options['verbose'];
+$verbose = $options['verbose'];
+$debug = $options['debug'];
 
 $serviceId = $options['service'] ?? "inefficiencies";
 $cli->warning('Use service ' . $serviceId);
@@ -51,6 +52,11 @@ $offset = (int)$options['offset'];
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);
+
+    if ($verbose) {
+        $pusher::enableVerbose();
+        $cli->warning('Enable verbose');
+    }
 
     if ($debug) {
         $pusher::enableDebug();
@@ -110,7 +116,7 @@ try {
     $objectsCount = count($objects);
     $cli->warning('Now push ' . $objectsCount . ' post(s)');
 
-    if (!$debug) {
+    if (!$verbose) {
         $output = new ezcConsoleOutput();
         $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
         $progressBar = new ezcConsoleProgressbar($output, $objectsCount, $progressBarOptions);
@@ -122,7 +128,7 @@ try {
 
     $stats = [];
     foreach ($objects as $index => $object) {
-        if (!$debug) {
+        if (!$verbose) {
             $progressBar->advance();
         }else{
             $cli->output();
@@ -140,7 +146,7 @@ try {
         $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
         $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
         $pdfFilePath = __DIR__ . $pdfFileRelativePath;
-        if ($debug) {
+        if ($verbose) {
             $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
         }
         if (!file_exists($pdfFilePath)) {
@@ -162,7 +168,7 @@ try {
         eZContentObject::clearCache();
     }
 
-    if (!$debug) {
+    if (!$verbose) {
         $progressBar->finish();
     }
     $cli->output();
