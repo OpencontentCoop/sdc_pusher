@@ -37,8 +37,13 @@ $baseUri = $options['baseurl'];
 $username = $options['username'];
 $password = $options['password'];
 $debug = $options['verbose'];
+
 $serviceId = $options['service'] ?? "inefficiencies";
+$cli->warning('Use service ' . $serviceId);
+
 $officeId = $options['office'];
+$cli->warning('Use office ' . $officeId);
+
 $operatorId = $options['operator'];
 $limit = (int)$options['limit'];
 $offset = (int)$options['offset'];
@@ -46,15 +51,20 @@ $offset = (int)$options['offset'];
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);
-    if (!$options['no-dev']) {
-        $pusher::enableDevMode();
-    }
+
     if ($debug) {
         $pusher::enableDebug();
+        $cli->warning('Enable debug');
+    }
+
+    if (!$options['no-dev']) {
+        $pusher::enableDevMode();
+    }else{
+        $cli->warning('Run in production mode');
     }
 
     if ($options['clear']) {
-        $cli->warning('Clear cache');
+        $cli->warning('Clear internal cache');
         $pusher->clearCache($options['id']);
     }
 

@@ -24,7 +24,7 @@ class SdcMessageSerializer
         ];
 
         if ($author){
-            $data['author'] = $author;
+            $data['author_id'] = $author;
         }
 
         return $data;
