@@ -101,6 +101,12 @@ class SdcPayload extends eZPersistentObject
         return $item instanceof SdcPayload ? $item : null;
     }
 
+    public static function fetchByIdAndType($id, $type): ?SdcPayload
+    {
+        $item = eZPersistentObject::fetchObject(self::definition(), null, ['id' => $id, 'type' => $type]);
+        return $item instanceof SdcPayload ? $item : null;
+    }
+
     public static function create(string $id, string $type, array $payload, int $priority = 0): SdcPayload
     {
         $item = new SdcPayload();

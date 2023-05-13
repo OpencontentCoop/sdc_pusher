@@ -24,7 +24,7 @@ class SdcCachedClient
 
     private function getCacheItem($id, $type, $callBack)
     {
-        $payload = SdcPayload::fetch($id);
+        $payload = SdcPayload::fetchByIdAndType($id, $type);
         if (!$payload instanceof SdcPayload) {
             $data = call_user_func($callBack);
             $payload = SdcPayload::create(
