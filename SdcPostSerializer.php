@@ -982,7 +982,7 @@ class SdcPostSerializer
            $missing['pdf_link'] = 'https://archivio-segnalazioni.comune.genova.it' . $pdfFileRelativePath;
         }
 
-        $status = $post->status->identifier === 'pending' ? "1900" : "2000";
+//        $status = $post->status->identifier === 'pending' ? "1900" : "2000";
 //        if ($post->status->identifier === 'close'){
 //            $status = "7000";
 //        }
@@ -995,7 +995,7 @@ class SdcPostSerializer
 
         $data = [
             "service" => $serviceId,
-            "status" => $status,
+            "status" => 2000,
             'created_at' => $post->published->format('c'),
             "data" => [
                 "applicant" => [
@@ -1032,7 +1032,7 @@ class SdcPostSerializer
 
         $data["data"]["images"] = $images;
         $data["data"]["docs"] = $files;
-        
+
         if ($post->geoLocation instanceof Post\Field\GeoLocation
             && $post->geoLocation->latitude != 0
             && $post->geoLocation->longitude != 0){

@@ -82,8 +82,8 @@ class SensorSdcPusher
             $this->client = new SdcCachedClient(
                 new SdcClient($baseUri, $username, $password)
             );
-        }else{
-            $this->client =new SdcClient($baseUri, $username, $password);
+        } else {
+            $this->client = new SdcClient($baseUri, $username, $password);
         }
     }
 
@@ -97,8 +97,15 @@ class SensorSdcPusher
         return $this->client->getAccessToken();
     }
 
-    public function push(Post $post, string $serviceId = "inefficiencies", $pushComments = true, $pushBinaries = true, $pdfFileRelativePath = null, $officeId = null, $operatorId = null): array
-    {
+    public function push(
+        Post $post,
+        string $serviceId = "inefficiencies",
+        $pushComments = true,
+        $pushBinaries = true,
+        $pdfFileRelativePath = null,
+        $officeId = null,
+        $operatorId = null
+    ): array {
         $this->currentPost = [
             'application' => null,
             'user' => null,
@@ -122,26 +129,32 @@ class SensorSdcPusher
             }
         }
 
-        $data = $this->client->createApplication($post, $userData, $imagesData, $filesData, $serviceId, $pdfFileRelativePath, $officeId);
+        $data = $this->client->createApplication(
+            $post,
+            $userData,
+            $imagesData,
+            $filesData,
+            $serviceId,
+            $pdfFileRelativePath
+        );
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
         $this->currentPost['application'] = $data['id'];
 
-        $needAssign = $post->status->identifier === 'open' ||  $post->status->identifier === 'close' || $post->comments->count() > 0;
-        if ($needAssign){
-            try {
-                $dateTime = null;
-                $read = $post->timelineItems->getByType('read')->first();
-                if ($read && $read->published instanceof DateTime) {
-                    $dateTime = $read->published->format('c');
-                }
-                SensorSdcPusher::debug("Assign to default office if needed");
-                if ($post->status->identifier === 'close') {
-                    $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
-                }else{
-                    $this->client->assign($data['id'], $officeId, $dateTime);
-                }
-            }catch (Exception $e){
-                SensorSdcPusher::debug("ERROR: " . $e->getMessage());
+        $needAssign = $post->status->identifier === 'open'
+            || $post->status->identifier === 'close'
+            || $post->comments->count() > 0;
+
+        if ($needAssign) {
+            $dateTime = null;
+            $read = $post->timelineItems->getByType('read')->first();
+            if ($read && $read->published instanceof DateTime) {
+                $dateTime = $read->published->format('c');
+            }
+            SensorSdcPusher::debug("Assign to default office if needed");
+            if ($post->status->identifier === 'close') {
+                $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
+            } else {
+                $this->client->assign($data['id'], $officeId, $dateTime);
             }
         }
 
@@ -151,7 +164,7 @@ class SensorSdcPusher
             }
         }
 
-        if ($post->status->identifier === 'close'){
+        if ($post->status->identifier === 'close') {
             $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
             SensorSdcPusher::debug("Close if needed");
             $this->client->accept($data['id'], $message);
