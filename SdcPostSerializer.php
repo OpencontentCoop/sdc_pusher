@@ -1030,12 +1030,9 @@ class SdcPostSerializer
             ];
         }
 
-        if (!empty($images)){
-            $data["data"]["images"] = $images;
-        }
-        if (!empty($files)){
-            $data["data"]["docs"] = $files;
-        }
+        $data["data"]["images"] = $images;
+        $data["data"]["docs"] = $files;
+        
         if ($post->geoLocation instanceof Post\Field\GeoLocation
             && $post->geoLocation->latitude != 0
             && $post->geoLocation->longitude != 0){
