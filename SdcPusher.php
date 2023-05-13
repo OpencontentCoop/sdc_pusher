@@ -129,11 +129,16 @@ class SensorSdcPusher
         $needAssign = $post->status->identifier === 'open' ||  $post->status->identifier === 'close' || $post->comments->count() > 0;
         if ($needAssign){
             try {
+                $dateTime = null;
+                $read = $post->timelineItems->getByType('read')->first();
+                if ($read && $read->published instanceof DateTime) {
+                    $dateTime = $read->published->format('c');
+                }
                 SensorSdcPusher::debug("Assign to default office if needed");
                 if ($post->status->identifier === 'close') {
-                    $this->client->assign($data['id'], $officeId, $operatorId);
+                    $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
                 }else{
-                    $this->client->assign($data['id'], $officeId);
+                    $this->client->assign($data['id'], $officeId, $dateTime);
                 }
             }catch (Exception $e){
                 SensorSdcPusher::debug("ERROR: " . $e->getMessage());

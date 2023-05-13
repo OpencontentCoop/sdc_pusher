@@ -278,13 +278,16 @@ class SdcClient
         return false;
     }
 
-    public function assign($applicationId, $officeId, $operatorId = null)
+    public function assign($applicationId, $officeId, $dateTime = null, $operatorId = null)
     {
         $data = [
             'user_group_id' => $officeId,
         ];
+        if ($dateTime){
+            $data['assigned_at'] = $dateTime;
+        }
         if ($operatorId){
-            $data[ 'user_id'] = $operatorId;
+            $data['user_id'] = $operatorId;
         }
         SensorSdcPusher::debug("Assign $applicationId to group $officeId and operator $operatorId");
         if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));

@@ -79,10 +79,10 @@ class SdcCachedClient
         });
     }
 
-    public function assign($applicationId, $officeId, $operatorId = null)
+    public function assign($applicationId, $officeId, $dateTime = null, $operatorId = null)
     {
-        return $this->getCacheItem($applicationId, 'assign', function () use ($applicationId, $officeId, $operatorId) {
-            return $this->client->assign($applicationId, $officeId, $operatorId);
+        return $this->getCacheItem($applicationId, 'assign', function () use ($applicationId, $officeId, $dateTime, $operatorId) {
+            return $this->client->assign($applicationId, $officeId, $dateTime, $operatorId);
         });
     }
 
