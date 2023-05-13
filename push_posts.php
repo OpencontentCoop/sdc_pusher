@@ -49,6 +49,9 @@ $operatorId = $options['operator'];
 $limit = (int)$options['limit'];
 $offset = (int)$options['offset'];
 
+$pushComments = !($options['no-comments']);
+$pushBinaries = !($options['no-files']);
+
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);
@@ -73,6 +76,14 @@ try {
     if ($options['clear']) {
         $cli->warning('Clear internal cache');
         $pusher->clearCache($options['id']);
+    }
+
+    if ($pushComments) {
+        $cli->warning('Push comments enabled');
+    }
+
+    if ($pushBinaries) {
+        $cli->warning('Push binaries enabled');
     }
 
     $repository = OpenPaSensorRepository::instance();
@@ -122,9 +133,6 @@ try {
         $progressBar = new ezcConsoleProgressbar($output, $objectsCount, $progressBarOptions);
         $progressBar->start();
     }
-
-    $pushComments = !($options['no-comments']);
-    $pushBinaries = !($options['no-files']);
 
     $stats = [];
     foreach ($objects as $index => $object) {
