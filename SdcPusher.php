@@ -104,6 +104,7 @@ class SensorSdcPusher
             'user' => null,
         ];
         SensorSdcPusher::debug("Working on post $post->id", false);
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($post));
         $userData = $this->pushUser($post->author);
 
         $imagesData = [];
