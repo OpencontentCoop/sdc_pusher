@@ -61,6 +61,7 @@ try {
         $pusher::enableDevMode();
     }else{
         $cli->warning('Run in production mode');
+        $pusher::disableDevMode();
     }
 
     if ($options['clear']) {
