@@ -1036,6 +1036,16 @@ class SdcPostSerializer
         if ($post->geoLocation instanceof Post\Field\GeoLocation
             && $post->geoLocation->latitude != 0
             && $post->geoLocation->longitude != 0){
+
+            $nominatim = json_decode(
+                eZHTTPTool::getDataByURL(
+                    "https://nominatim.openstreetmap.org/reverse?lat=44.382803&lon=9.057971&format=json",
+                    false,
+                    "Mozilla/5.0 (Linux; Android 11; Pixel 5 Build/RQ3A.210805.001.A1; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.159 Mobile Safari/537.36"
+                ),
+                true
+            );
+
             $addressDisplayName = $post->geoLocation->address;
             if (stripos($addressDisplayName, 'genova') === false){
                 $addressDisplayName .= ' Genova';
@@ -1044,6 +1054,7 @@ class SdcPostSerializer
                 "lat" => $post->geoLocation->latitude,
                 "lon" => $post->geoLocation->longitude,
                 "display_name" => $addressDisplayName,
+                "address" => $nominatim['address'] ?? [],
             ];
         }
 
