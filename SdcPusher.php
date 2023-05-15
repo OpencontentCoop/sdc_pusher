@@ -181,6 +181,7 @@ class SensorSdcPusher
     {
         $user = $this->client->createUser($user);
         SensorSdcPusher::debug("Remote user id is " . $user['id']);
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($user));
         $this->currentPost['user'] = $user['id'];
         return $user;
     }
