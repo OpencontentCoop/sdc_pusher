@@ -11,6 +11,7 @@ class SdcUserSerializer
             'nome' =>  $user->firstName,
             'cognome' =>  $user->lastName,
             'cellulare' =>  $user->phone,
+            'telefono' =>  $user->phone,
             'email' =>  strtolower($user->email),
             'codice_fiscale' =>  strtoupper($user->fiscalCode),
         ];
