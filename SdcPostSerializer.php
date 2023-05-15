@@ -1036,10 +1036,14 @@ class SdcPostSerializer
         if ($post->geoLocation instanceof Post\Field\GeoLocation
             && $post->geoLocation->latitude != 0
             && $post->geoLocation->longitude != 0){
+            $addressDisplayName = $post->geoLocation->address;
+            if (stripos($addressDisplayName, 'genova') === false){
+                $addressDisplayName .= ' Genova';
+            }
             $data["data"]["address"] = [
                 "lat" => $post->geoLocation->latitude,
                 "lon" => $post->geoLocation->longitude,
-                "display_name" => $post->geoLocation->address,
+                "display_name" => $addressDisplayName,
             ];
         }
 
