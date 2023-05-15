@@ -1040,10 +1040,12 @@ class SdcPostSerializer
             if (stripos($addressDisplayName, 'genova') === false){
                 $addressDisplayName .= ' Genova';
             }
+            $nominatim = json_decode("https://nominatim.openstreetmap.org/reverse?lat={$post->geoLocation->latitude}&lon={$post->geoLocation->longitude}&format=json", true);
             $data["data"]["address"] = [
                 "lat" => $post->geoLocation->latitude,
                 "lon" => $post->geoLocation->longitude,
                 "display_name" => $addressDisplayName,
+                "address" => $nominatim['address'] ?? []
             ];
         }
 
