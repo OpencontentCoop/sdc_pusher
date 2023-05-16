@@ -170,9 +170,9 @@ try {
             );
             eZDir::mkdir(dirname($pdfFilePath), false, true);
             file_put_contents($pdfFilePath, $pdf);
-            if (!$verbose) $cli->warning('stored');
+            if ($verbose) $cli->warning('stored');
         } else {
-            if (!$verbose) $cli->output('already stored');
+            if ($verbose) $cli->output('already stored');
         }
         if (!$options['dry-run']) {
             $delayForComments[$post->id] = [
