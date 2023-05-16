@@ -154,7 +154,7 @@ class SdcClient
             throw new Exception("File $handler->filePath not found");
         }
 
-        SensorSdcPusher::debug("Get upload pre-signed uri for " . $data['name']);
+        SensorSdcPusher::debug("  - Get upload pre-signed uri for " . $data['name']);
         if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
         $handler->fetch();
         $response = (string)$this->client->request(
@@ -172,11 +172,11 @@ class SdcClient
         $fileContents = file_get_contents($handler->filePath);
         $size = $handler->size();
         if (mb_strlen($fileContents) === 0){
-            SensorSdcPusher::debug("Error: invalid file contents for file {$handler->filePath}");
+            SensorSdcPusher::error("  - Error: invalid file contents for file {$handler->filePath}");
             $fileContents = '[File not found]';
             $size = mb_strlen($fileContents);
         }
-        SensorSdcPusher::debug("Put file to " . $fileInfo['uri']);
+        SensorSdcPusher::debug("  - Put file to " . substr($fileInfo['uri'], 0, 100);
         $curl = curl_init();
         $curlOptions = [
             CURLOPT_URL => $fileInfo['uri'],

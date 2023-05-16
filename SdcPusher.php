@@ -62,6 +62,11 @@ class SensorSdcPusher
         }
     }
 
+    public static function error($message, $prefix = '  '): void
+    {
+        eZCLI::instance()->error($prefix . $message);
+    }
+
     public static function warningOnDebug($message, $prefix = '  '): void
     {
         if (self::isDebugEnable()){
