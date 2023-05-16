@@ -211,46 +211,48 @@ try {
         $progressBar->finish();
     }
 
-    $cli->output();
-    $cli->output();
-    $cli->warning('Now push assignments and comments');
+    if ($pushComments) {
+        $cli->output();
+        $cli->output();
+        $cli->warning('Now push assignments and comments');
 
-    $countDelayForComments = count($delayForComments);
-    if ($countDelayForComments < 10) {
-        $cli->output("Wait for $sleepSecs secs");
-        sleep($sleepSecs);
-    }
-
-    if (!$verbose) {
-        $output = new ezcConsoleOutput();
-        $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
-        $progressBar = new ezcConsoleProgressbar($output, $countDelayForComments, $progressBarOptions);
-        $progressBar->start();
-    }
-
-    $i = 0;
-    foreach ($delayForComments as $id => $item) {
-        $i++;
-        if (!$verbose) {
-            $progressBar->advance();
-        } else {
-            $cli->output();
-            $cli->warning("$i/$countDelayForComments Post #" . $id);
+        $countDelayForComments = count($delayForComments);
+        if ($countDelayForComments < 10) {
+            $cli->output("Wait for $sleepSecs secs");
+            sleep($sleepSecs);
         }
-        $pusher->push(
-            $item['post'],
-            $item['serviceId'],
-            true,
-            false,
-            $item['pdfFileRelativePath'],
-            $item['officeId'],
-            $item['operatorId']
-        );
+
+        if (!$verbose) {
+            $output = new ezcConsoleOutput();
+            $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
+            $progressBar = new ezcConsoleProgressbar($output, $countDelayForComments, $progressBarOptions);
+            $progressBar->start();
+        }
+
+        $i = 0;
+        foreach ($delayForComments as $id => $item) {
+            $i++;
+            if (!$verbose) {
+                $progressBar->advance();
+            } else {
+                $cli->output();
+                $cli->warning("$i/$countDelayForComments Post #" . $id);
+            }
+            $pusher->push(
+                $item['post'],
+                $item['serviceId'],
+                true,
+                false,
+                $item['pdfFileRelativePath'],
+                $item['officeId'],
+                $item['operatorId']
+            );
+        }
+        if (!$verbose) {
+            $progressBar->finish();
+        }
+        $cli->output();
     }
-    if (!$verbose) {
-        $progressBar->finish();
-    }
-    $cli->output();
 
     $script->shutdown();
 } catch (Throwable $e) {
