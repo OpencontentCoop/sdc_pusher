@@ -170,9 +170,9 @@ try {
             );
             eZDir::mkdir(dirname($pdfFilePath), false, true);
             file_put_contents($pdfFilePath, $pdf);
-            $cli->warning('stored');
+            if (!$verbose) $cli->warning('stored');
         } else {
-            $cli->output('already stored');
+            if (!$verbose) $cli->output('already stored');
         }
         if (!$options['dry-run']) {
             $delayForComments[$post->id] = [
@@ -193,8 +193,8 @@ try {
     }
 
     $cli->output();
-    $cli->output('Now push assignments and comments');
     $cli->output();
+    $cli->warning('Now push assignments and comments');
 
     $countDelayForComments = count($delayForComments);
     if ($countDelayForComments < 10){
