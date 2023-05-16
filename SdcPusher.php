@@ -162,34 +162,37 @@ class SensorSdcPusher
             || $post->status->identifier === 'close'
             || $post->comments->count() > 0;
 
-        if ($needAssign) {
-            $dateTime = null;
-            $read = $post->timelineItems->getByType('read')->first();
-            if ($read && $read->published instanceof DateTime) {
-                $dateTime = $read->published->format('c');
-            }
-            if ($post->status->identifier === 'close') {
-                SensorSdcPusher::debug("Assign to default office and operator if needed");
-                $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
-            } else {
-                SensorSdcPusher::debug("Assign to default office if needed");
-                $this->client->assign($data['id'], $officeId, $dateTime);
-            }
-        }
-
         if ($pushComments) {
+            if ($needAssign) {
+                $dateTime = null;
+                $read = $post->timelineItems->getByType('read')->first();
+                if ($read && $read->published instanceof DateTime) {
+                    $dateTime = $read->published->format('c');
+                }
+                if ($post->status->identifier === 'close') {
+                    SensorSdcPusher::debug("Assign to default office and operator if needed");
+                    $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
+                } else {
+                    SensorSdcPusher::debug("Assign to default office if needed");
+                    $this->client->assign($data['id'], $officeId, $dateTime);
+                }
+            }
+
             foreach ($post->comments as $message) {
                 $messageData = $this->pushMessage($data, $post, $message);
                 SensorSdcPusher::warningOnDebug(json_encode($messageData));
             }
+
+            if ($post->status->identifier === 'close') {
+                $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
+                SensorSdcPusher::debug("Close if needed");
+                $responseData = $this->client->accept($data['id'], $message);
+                SensorSdcPusher::warningOnDebug(json_encode($responseData));
+            }
+        }else{
+            SensorSdcPusher::warning('... da ripassare senza -no-comments');
         }
 
-        if ($post->status->identifier === 'close') {
-            $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
-            SensorSdcPusher::debug("Close if needed");
-            $responseData = $this->client->accept($data['id'], $message);
-            SensorSdcPusher::warningOnDebug(json_encode($responseData));
-        }
 
 //        foreach ($post->privateMessages as $message){
 //            $this->pushMessage($data, $post, $message);
