@@ -192,6 +192,7 @@ class SensorSdcPusher
      */
     public function pushBinary(Post\Field $field): array
     {
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($field));
         if (!$field instanceof Post\Field\Image && !$field instanceof Post\Field\File) {
             throw new InvalidArgumentException('Field must be an Image or a File');
         }

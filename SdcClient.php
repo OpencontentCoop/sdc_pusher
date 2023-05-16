@@ -155,6 +155,7 @@ class SdcClient
         }
 
         SensorSdcPusher::debug("Get upload pre-signed uri for " . $data['name']);
+        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($data));
         $handler->fetch();
         $response = (string)$this->client->request(
             'POST',

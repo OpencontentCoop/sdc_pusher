@@ -960,7 +960,7 @@ class SdcPostSerializer
         );
 
         $microMacro = null;
-        if ($post->categories > 0){
+        if (count($post->categories) > 0){
             $category = $post->categories[0];
             if ($category->parent == 0){
                 $microMacro = "{$category->name}: {$category->name}";
@@ -973,7 +973,7 @@ class SdcPostSerializer
         $missing = [
             'submitted_at' => $post->published->format('c'),
             'modified_at' => $post->modified->format('c'),
-            'sensor_category' => $post->categories > 0 ? $post->categories[0]->name : null,
+            'sensor_category' => count($post->categories) > 0 ? $post->categories[0]->name : null,
             'sensor_area' => $post->areas > 0 ? $post->areas[0]->name : null,
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
