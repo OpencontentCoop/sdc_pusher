@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:]',
     '',
     [
         'id' => 'Filter by post id',
@@ -38,6 +38,7 @@ $username = $options['username'];
 $password = $options['password'];
 $verbose = $options['verbose'];
 $debug = $options['debug'];
+$sleepSecs = $options['sleep'] ? (int)$options['sleep'] : 20;
 
 $serviceId = $options['service'] ?? "inefficiencies";
 $cli->warning('Use service ' . $serviceId);
@@ -144,6 +145,7 @@ try {
     $stats = [];
     $delayForComments = [];
     foreach ($objects as $index => $object) {
+        $startTime = time();
         if (!$verbose) {
             $progressBar->advance();
         } else {
@@ -172,9 +174,13 @@ try {
             );
             eZDir::mkdir(dirname($pdfFilePath), false, true);
             file_put_contents($pdfFilePath, $pdf);
-            if ($verbose) $cli->warning('stored');
+            if ($verbose) {
+                $cli->warning('stored');
+            }
         } else {
-            if ($verbose) $cli->output('already stored');
+            if ($verbose) {
+                $cli->output('already stored');
+            }
         }
         if (!$options['dry-run']) {
             $delayForComments[$post->id] = [
@@ -184,11 +190,22 @@ try {
                 'officeId' => $officeId,
                 'operatorId' => $operatorId,
             ];
-            $pusher->push($post, $serviceId, false, $pushBinaries, $pdfFileRelativePath, $officeId, $operatorId);
+            $pusher->push(
+                $post,
+                $serviceId,
+                false,
+                $pushBinaries,
+                $pdfFileRelativePath,
+                $officeId,
+                $operatorId
+            );
         }
         $stats++;
-
         eZContentObject::clearCache();
+        $endTime = time();
+        if ($verbose){
+            $cli->output('Elapsed: ' . ($endTime - $startTime) . ' secs');
+        }
     }
     if (!$verbose) {
         $progressBar->finish();
@@ -199,9 +216,9 @@ try {
     $cli->warning('Now push assignments and comments');
 
     $countDelayForComments = count($delayForComments);
-    if ($countDelayForComments < 10){
-        $cli->output('... zzz ...');
-        sleep(10);
+    if ($countDelayForComments < 10) {
+        $cli->output("Wait for $sleepSecs secs");
+        sleep($sleepSecs);
     }
 
     if (!$verbose) {
@@ -211,7 +228,7 @@ try {
         $progressBar->start();
     }
 
-    $i = 1;
+    $i = 0;
     foreach ($delayForComments as $id => $item) {
         $i++;
         if (!$verbose) {
