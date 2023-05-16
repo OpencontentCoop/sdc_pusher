@@ -14,6 +14,9 @@ class SensorSdcPusher
 
     private static $devMode = true;
 
+    /**
+     * @var SdcClient|SdcCachedClient
+     */
     private $client;
 
     public static $useCache = true;
@@ -123,15 +126,18 @@ class SensorSdcPusher
         $this->setClient();
     }
 
-    private function setClient(bool $useCache = true)
+    private function setClient(bool $readWrite = true)
     {
-        if (!$useCache){
-            SensorSdcPusher::warning('Ignore cache for current post #' . $this->ignoreCacheForId);
-        }
-        if (self::$useCache && $useCache) {
+        if (self::$useCache) {
             $this->client = new SdcCachedClient(
                 new SdcClient($this->baseUri, $this->username, $this->password)
             );
+            if (!$readWrite){
+                SensorSdcPusher::warning('Ignore cache for current post #' . $this->ignoreCacheForId);
+                $this->client->setWriteOnly();
+            }else{
+                $this->client->unsetWriteOnly();
+            }
         } else {
             $this->client = new SdcClient($this->baseUri, $this->username, $this->password);
         }

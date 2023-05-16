@@ -11,9 +11,21 @@ class SdcCachedClient
      */
     private $client;
 
+    private $writeOnly = false;
+
     public function __construct(SdcClient $client)
     {
         $this->client = $client;
+    }
+
+    public function setWriteOnly()
+    {
+        $this->writeOnly = true;
+    }
+
+    public function unsetWriteOnly()
+    {
+        $this->writeOnly = false;
     }
 
     public function clearCache($id = null)
@@ -24,7 +36,7 @@ class SdcCachedClient
     private function getCacheItem($id, $type, $callBack)
     {
         $payload = SdcPayload::fetchByIdAndType($id, $type);
-        if (!$payload instanceof SdcPayload) {
+        if (!$payload instanceof SdcPayload || $this->writeOnly) {
             $data = call_user_func($callBack);
             $payload = SdcPayload::create(
                 $id,
