@@ -36,6 +36,20 @@ class SensorSdcPusher
         }
     }
 
+    public static function warning($message, $prefix = '  '): void
+    {
+        if (self::$verbose) {
+            eZCLI::instance()->warning($prefix . $message);
+        }
+    }
+
+    public static function warningOnDebug($message, $prefix = '  '): void
+    {
+        if (self::isDebugEnable()){
+            self::warning($message, $prefix);
+        }
+    }
+
     public static function isDevMode(): bool
     {
         return self::$devMode;
@@ -113,6 +127,7 @@ class SensorSdcPusher
         SensorSdcPusher::debug("Working on post $post->id", false);
 //        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($post));
         $userData = $this->pushUser($post->author);
+        SensorSdcPusher::warningOnDebug(json_encode($userData));
 
         $imagesData = [];
         $filesData = [];
@@ -120,11 +135,13 @@ class SensorSdcPusher
             foreach ($post->images as $image) {
                 $imageItem = $this->pushBinary($image);
                 SensorSdcPusher::debug("Image " . $imageItem['originalName']);
+                SensorSdcPusher::warningOnDebug(json_encode($imageItem));
                 $imagesData[] = $imageItem;
             }
             foreach ($post->files as $file) {
                 $fileItem = $this->pushBinary($file);
                 SensorSdcPusher::debug("File " . $fileItem['originalName']);
+                SensorSdcPusher::warningOnDebug(json_encode($fileItem));
                 $filesData[] = $fileItem;
             }
         }
@@ -139,6 +156,7 @@ class SensorSdcPusher
         );
         SensorSdcPusher::debug("Remote application id is " . $data['id']);
         $this->currentPost['application'] = $data['id'];
+        SensorSdcPusher::warningOnDebug(json_encode($data));
 
         $needAssign = $post->status->identifier === 'open'
             || $post->status->identifier === 'close'
@@ -160,14 +178,16 @@ class SensorSdcPusher
 
         if ($pushComments) {
             foreach ($post->comments as $message) {
-                $this->pushMessage($data, $post, $message);
+                $messageData = $this->pushMessage($data, $post, $message);
+                SensorSdcPusher::warningOnDebug(json_encode($messageData));
             }
         }
 
         if ($post->status->identifier === 'close') {
             $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
             SensorSdcPusher::debug("Close if needed");
-            $this->client->accept($data['id'], $message);
+            $responseData = $this->client->accept($data['id'], $message);
+            SensorSdcPusher::warningOnDebug(json_encode($responseData));
         }
 
 //        foreach ($post->privateMessages as $message){
