@@ -20,6 +20,25 @@ class SensorSdcPusher
 
     private $currentPost;
 
+    private $ignoreCacheForId;
+
+    private $currentId;
+
+    /**
+     * @var string
+     */
+    private $baseUri;
+
+    /**
+     * @var string
+     */
+    private $username;
+
+    /**
+     * @var string
+     */
+    private $password;
+
     public static function instance(string $baseUri, string $username, string $password): SensorSdcPusher
     {
         if (self::$instance === null) {
@@ -92,23 +111,41 @@ class SensorSdcPusher
 
     private function __construct(string $baseUri, string $username, string $password)
     {
-        if (self::$useCache) {
+        $this->baseUri = $baseUri;
+        $this->username = $username;
+        $this->password = $password;
+        SdcPayload::createSchemaIfNeeded();
+        $this->setClient();
+    }
+
+    private function setClient(bool $withoutCache = null)
+    {
+        if ($withoutCache){
+            SensorSdcPusher::warning('Ignore cache for current post #' . $this->ignoreCacheForId);
+        }
+        if (self::$useCache && $withoutCache === null) {
             $this->client = new SdcCachedClient(
-                new SdcClient($baseUri, $username, $password)
+                new SdcClient($this->baseUri, $this->username, $this->password)
             );
         } else {
-            $this->client = new SdcClient($baseUri, $username, $password);
+            $this->client = new SdcClient($this->baseUri, $this->username, $this->password);
         }
     }
 
     public function clearCache($id = null): void
     {
         $this->client->clearCache($id);
+        $this->ignoreCacheForId = $id;
     }
 
     public function getAccessToken(): ?string
     {
         return $this->client->getAccessToken();
+    }
+
+    private function ignoreCacheForCurrentId(): bool
+    {
+        return (int)$this->ignoreCacheForId === (int)$this->currentId;
     }
 
     public function push(
@@ -124,6 +161,8 @@ class SensorSdcPusher
             'application' => null,
             'user' => null,
         ];
+        $this->currentId = $post->id;
+        $this->setClient($this->ignoreCacheForCurrentId());
         SensorSdcPusher::debug("Working on post $post->id", false);
 //        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($post));
         $userData = $this->pushUser($post->author);

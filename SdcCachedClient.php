@@ -14,7 +14,6 @@ class SdcCachedClient
     public function __construct(SdcClient $client)
     {
         $this->client = $client;
-        SdcPayload::createSchemaIfNeeded();
     }
 
     public function clearCache($id = null)
