@@ -144,13 +144,14 @@ try {
 
     $stats = [];
     $delayForComments = [];
+    $i = 0;
     foreach ($objects as $index => $object) {
         $startTime = time();
         if (!$verbose) {
             $progressBar->advance();
         } else {
             $cli->output();
-            $i = $index + 1;
+            $i++;
             $cli->warning("$i/$objectsCount Post #" . $object['id']);
         }
 

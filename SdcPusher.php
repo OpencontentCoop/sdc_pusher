@@ -206,7 +206,7 @@ class SensorSdcPusher
             $serviceId,
             $pdfFileRelativePath
         );
-        SensorSdcPusher::warning("Remote application id is " . $data['id']);
+        SensorSdcPusher::warning("Remote application id is " . $data['id'] . " " . $data['data']['subject']);
         $this->currentPost['application'] = $data['id'];
         SensorSdcPusher::warningOnDebug(json_encode($data));
 
