@@ -974,7 +974,7 @@ class SdcPostSerializer
             'submitted_at' => $post->published->format('c'),
             'modified_at' => $post->modified->format('c'),
             'sensor_category' => count($post->categories) > 0 ? $post->categories[0]->name : null,
-            'sensor_area' => $post->areas > 0 ? $post->areas[0]->name : null,
+            'sensor_area' => count($post->areas) > 0 ? $post->areas[0]->name : null,
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
         ];
