@@ -52,6 +52,8 @@ $offset = (int)$options['offset'];
 $pushComments = !($options['no-comments']);
 $pushBinaries = !($options['no-files']);
 
+SensorSdcPusher::$categories = json_decode(file_get_contents(__DIR__ . '/categories.json'), true);
+
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);

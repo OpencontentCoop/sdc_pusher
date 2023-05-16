@@ -1,0 +1,814 @@
+[
+    {
+        "label": "Ambiente: Animali (topi, cinghiali, cani/gatti, ..)",
+        "value": "645"
+    },
+    {
+        "label": "Ambiente: Inquinamento acqua (autorizzazioni scarichi fognari)",
+        "value": "646"
+    },
+    {
+        "label": "Ambiente: Inquinamento aria (autorizzazioni alle emissioni in atmosfera)",
+        "value": "647"
+    },
+    {
+        "label": "Ambiente: Rifiuti, cassonetti, pulizia",
+        "value": "648"
+    },
+    {
+        "label": "Ambiente: Rumore, inquinamento acustico da attività produttive/professionali/commerciali",
+        "value": "649"
+    },
+    {
+        "label": "Ambiente: Illuminazione Pubblica",
+        "value": "1212"
+    },
+    {
+        "label": "Ambiente: Pulizia Strade",
+        "value": "2803"
+    },
+    {
+        "label": "Ambiente: Igiene sull'abitato",
+        "value": "5490"
+    },
+    {
+        "label": "Ambiente: Pulizia Caditoie",
+        "value": "8579"
+    },
+    {
+        "label": "Ambiente: Processionarie su aree private",
+        "value": "9898"
+    },
+    {
+        "label": "Ambiente: Manutenzione, riparazioni e pulizia servizi igienici autopulenti",
+        "value": "9930"
+    },
+    {
+        "label": "Ambiente: Manutenzioni pannelli luminosi per attraversamenti pedonali",
+        "value": "9959"
+    },
+    {
+        "label": "Ambiente: Chiarimenti su progettazione illuminazione pubblica",
+        "value": "47745"
+    },
+    {
+        "label": "Assicurazioni: Assicurazioni (richieste danni, denuncia sinistro)",
+        "value": "1324"
+    },
+    {
+        "label": "Commercio: Commercio in sede fissa (esercizi vicinato, medie strutture, grandi strutture)",
+        "value": "939"
+    },
+    {
+        "label": "Commercio: Pubblici esercizi e attività extralberghiere",
+        "value": "940"
+    },
+    {
+        "label": "Commercio: Attività dei servizi alla persona (acconciatori ed estetisti)",
+        "value": "941"
+    },
+    {
+        "label": "Commercio: Occupazioni suolo pubblico connesse alla somministrazione e al consumo sul posto",
+        "value": "942"
+    },
+    {
+        "label": "Commercio: Sportello Unico Attività Produttive",
+        "value": "943"
+    },
+    {
+        "label": "Commercio: Mercati coperti, mercati merci varie, fiere",
+        "value": "944"
+    },
+    {
+        "label": "Commercio: Occupazioni suolo a carattere commerciale (mercatini,esposiz merci, temporanee)",
+        "value": "945"
+    },
+    {
+        "label": "Comunicazione e digital strategy: Portale Visit Genoa",
+        "value": "1049"
+    },
+    {
+        "label": "Demanio e Patrimonio: Domanda di un appartenenza di un bene al Comune di Genova (solo edifici, strade)",
+        "value": "1120"
+    },
+    {
+        "label": "Demanio e Patrimonio: Segnalazioni su Demanio Marittimo da Voltri a Vesima",
+        "value": "1121"
+    },
+    {
+        "label": "Demanio e Patrimonio: Segnalazioni su Demanio Marittimo da Punta Vagno a Nervi",
+        "value": "1122"
+    },
+    {
+        "label": "Difesa del suolo: Infiltrazioni dalla strada in intercapedini/cantine/locali sottomessi di privati",
+        "value": "982"
+    },
+    {
+        "label": "Difesa del suolo: Spandimenti di acqua su strada da muraglioni",
+        "value": "983"
+    },
+    {
+        "label": "Difesa del suolo: Allagamenti stradali o di privati a causa scarso drenaggio o caditoie tappate",
+        "value": "984"
+    },
+    {
+        "label": "Difesa del suolo: Perdite fognarie",
+        "value": "39229"
+    },
+    {
+        "label": "Edilizia Privata: Segnalazione Lavori in corso o eseguiti non autorizzati",
+        "value": "1221"
+    },
+    {
+        "label": "Edilizia Privata: Segnalazione Cantieri Abbandonati",
+        "value": "1222"
+    },
+    {
+        "label": "Edilizia Privata: Domande su Aree in cui sono previsti Interventi Edilizi",
+        "value": "1223"
+    },
+    {
+        "label": "Edilizia Privata: Autorizzazioni per la realizzazione di manufatti (pergole, verande, insegne, …)",
+        "value": "1224"
+    },
+    {
+        "label": "Edilizia Privata: Insediamento di un attività commerciale in un'area",
+        "value": "1226"
+    },
+    {
+        "label": "Edilizia Privata: Oneri di Urbanizzazione",
+        "value": "1228"
+    },
+    {
+        "label": "Edilizia Privata: Aree Edificabili",
+        "value": "1229"
+    },
+    {
+        "label": "Edilizia Privata: Regolarità Edilizia di una abitazione",
+        "value": "1230"
+    },
+    {
+        "label": "Edilizia Privata: Visure Progetti e Condoni",
+        "value": "1234"
+    },
+    {
+        "label": "Edilizia Privata: Riapertura o Rettifica Condoni",
+        "value": "1239"
+    },
+    {
+        "label": "Entrate Tributarie: Pagamento passo carrabile",
+        "value": "1009"
+    },
+    {
+        "label": "Entrate Tributarie: Pagamento occupazione suolo (COSAP)",
+        "value": "1010"
+    },
+    {
+        "label": "Entrate Tributarie: Pubblicità , affissioni, manifesti, insegne",
+        "value": "1012"
+    },
+    {
+        "label": "Entrate Tributarie: Accertamenti e intimazioni IMU, TASI, TARI",
+        "value": "1013"
+    },
+    {
+        "label": "Entrate Tributarie: IMU, TASI",
+        "value": "1014"
+    },
+    {
+        "label": "Entrate Tributarie: TARI (tassa rifiuti)",
+        "value": "1015"
+    },
+    {
+        "label": "Facility Management: Alberi su tutto il territorio comunale",
+        "value": "9894"
+    },
+    {
+        "label": "Facility Management: Processionaria su aree pubbliche",
+        "value": "9896"
+    },
+    {
+        "label": "Facility Management: Pulizia Vespasiani",
+        "value": "9928"
+    },
+    {
+        "label": "Facility Management: Lavori Diffusi su Creuze",
+        "value": "651"
+    },
+    {
+        "label": "Facility Management: Manutenzione muri, muri contenimento",
+        "value": "652"
+    },
+    {
+        "label": "Facility Management: Manutenzione palazzi storici ed edifici pubblici (e impianti)",
+        "value": "653"
+    },
+    {
+        "label": "Facility Management: Manutenzione ponti, impalcati",
+        "value": "654"
+    },
+    {
+        "label": "Facility Management: Manutenzione strade, muretti",
+        "value": "655"
+    },
+    {
+        "label": "Facility Management: Aree verdi grandi, parchi recintati e ville chiuse",
+        "value": "656"
+    },
+    {
+        "label": "Facility Management: Eliminazione barriere architettoniche",
+        "value": "935"
+    },
+    {
+        "label": "Facility Management: Scavi, Tombini Stradali e zone limitrofe",
+        "value": "2798"
+    },
+    {
+        "label": "Facility Management: Ponteggi e Cantieri Stradali",
+        "value": "2799"
+    },
+    {
+        "label": "Facility Management: Ringhiere e Parapetti",
+        "value": "2800"
+    },
+    {
+        "label": "Facility Management: Coordinamento verde e sfalci stradali",
+        "value": "3493"
+    },
+    {
+        "label": "Facility Management: Piccole manutenzioni puntuali su creuze",
+        "value": "7000"
+    },
+    {
+        "label": "Facility Management: Ritracciamenti segnaletica orizzontale",
+        "value": "9910"
+    },
+    {
+        "label": "Facility Management: Manutenzione dissuasori di sosta (paletti, dossi, cordoli, limitatori velocità)",
+        "value": "9914"
+    },
+    {
+        "label": "Facility Management: Manutenzione segnaletica verticale",
+        "value": "9916"
+    },
+    {
+        "label": "Facility Management: Interventi manutenzione straordinaria Vespasiani (tubi)",
+        "value": "9933"
+    },
+    {
+        "label": "Facility Management: Spazzatura in scarpate",
+        "value": "9971"
+    },
+    {
+        "label": "Facility Management: Manutenzione semafori e impianti elettrici",
+        "value": "39396"
+    },
+    {
+        "label": "Grandi Eventi: Organizzazione dei Festival e permessi",
+        "value": "1097"
+    },
+    {
+        "label": "Grandi Eventi: Eventi e Grandi Eventi",
+        "value": "1098"
+    },
+    {
+        "label": "Grandi Eventi: Permessi per Eventi e spettacoli",
+        "value": "1099"
+    },
+    {
+        "label": "Idrogeologia: Idrogeologia (versanti di vallate in frana, perizie geologiche/sismiche)",
+        "value": "856"
+    },
+    {
+        "label": "Idrogeologia: Opere infrastrutturali strategiche (Gronda, Terzo valico, Nodo ferroviario)",
+        "value": "857"
+    },
+    {
+        "label": "Innovazione e Sviluppo economico: Bandi start-up",
+        "value": "881"
+    },
+    {
+        "label": "Innovazione e Sviluppo economico: Suggerimenti su progetti innovativi",
+        "value": "882"
+    },
+    {
+        "label": "Innovazione e Sviluppo economico: Smart City",
+        "value": "883"
+    },
+    {
+        "label": "Innovazione e Sviluppo economico: Informazioni su progetti europei",
+        "value": "884"
+    },
+    {
+        "label": "Lavori pubblici: Cantieri in corso attuazione opere pubbliche",
+        "value": "1080"
+    },
+    {
+        "label": "Lavori pubblici: Programmazione opere pubbliche",
+        "value": "new"
+    },
+    {
+        "label": "Marketing dell'economia: Gemellaggi nazionali e internazionali",
+        "value": "1051"
+    },
+    {
+        "label": "Mobilità : Mobilità casa-scuola, casa-lavoro",
+        "value": "776"
+    },
+    {
+        "label": "Mobilità : Incentivi mobilità sostenibile",
+        "value": "779"
+    },
+    {
+        "label": "Mobilità : Ricarica mezzi elettrici",
+        "value": "780"
+    },
+    {
+        "label": "Mobilità : Regolazione (ordinanze x circolazione di una strada, ordinanze cantieri)",
+        "value": "781"
+    },
+    {
+        "label": "Mobilità : Proposta/modifica impianti di semafori, richieste nuove installazioni luminose",
+        "value": "783"
+    },
+    {
+        "label": "Mobilità : Proposta nuova segnaletica strade secondarie e principali",
+        "value": "784"
+    },
+    {
+        "label": "Mobilità : Parcheggi disabili",
+        "value": "785"
+    },
+    {
+        "label": "Mobilità : Trasporto pubblico",
+        "value": "786"
+    },
+    {
+        "label": "Mobilità : Piste ciclabili",
+        "value": "787"
+    },
+    {
+        "label": "Mobilità : Microcircolazione (monopattini, ...)",
+        "value": "788"
+    },
+    {
+        "label": "Mobilità : Sharing mobility",
+        "value": "789"
+    },
+    {
+        "label": "Mobilità : Parcheggi e permessi (blu area, isole azzurre, ZTL)",
+        "value": "790"
+    },
+    {
+        "label": "Mobilità : Proposte nuovi dissuasori (paletti/dossi/cordoli/limit velocità) ad uso pubblico",
+        "value": "9922"
+    },
+    {
+        "label": "Mobilità : Proposte di modifica viabilità ",
+        "value": "9924"
+    },
+    {
+        "label": "Mobilità : Proposte installazione specchi parabolici pubblici",
+        "value": "37980"
+    },
+    {
+        "label": "Municipi Manutenzioni: Orti Urbani assegnazione",
+        "value": "1267"
+    },
+    {
+        "label": "Municipi Manutenzioni: Fontanelle- Idranti",
+        "value": "2626"
+    },
+    {
+        "label": "Municipi Manutenzioni: Piccoli giardini aperti e piccole aree verdi (sfalci, arredi,...)",
+        "value": "9900"
+    },
+    {
+        "label": "Municipi Manutenzioni: Interventi manutenzione ordinaria vespasiani e Lavatoi",
+        "value": "9961"
+    },
+    {
+        "label": "Municipi Manutenzioni: Proposte installazione nuovi punti luce",
+        "value": "47747"
+    },
+    {
+        "label": "Municipi Manutenzioni: Ripristino Impianti Elettrici",
+        "value": "59677"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Centri Civici municipali",
+        "value": "1270"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Eventi manifestazioni municipali",
+        "value": "1271"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Assegnazioni locali ad uso associativo di competenza municipale",
+        "value": "1272"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Sportelli del cittadino/Front office municipali",
+        "value": "1273"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Autorizzazione rotture suolo piccoli utenti",
+        "value": "1275"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Autorizzazioni occupazioni suolo a fini edili",
+        "value": "1276"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Concessione passi carrabili",
+        "value": "1277"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Autorizzazione/nulla osta dissuasori di sosta ad uso privato",
+        "value": "1278"
+    },
+    {
+        "label": "Municipi Servizi al Cittadino: Installazione di specchi parabolici a servizio di passi carrabili",
+        "value": "37996"
+    },
+    {
+        "label": "Politiche culturali: Servizi bibliotecari",
+        "value": "1030"
+    },
+    {
+        "label": "Politiche culturali: Servizi museali",
+        "value": "1031"
+    },
+    {
+        "label": "Politiche culturali: Programmazione dei teatri e festival",
+        "value": "1048"
+    },
+    {
+        "label": "Politiche culturali: Sala Dogana (Palazzo Ducale)",
+        "value": "1050"
+    },
+    {
+        "label": "Politiche della Casa: Occupazione abusiva",
+        "value": "904"
+    },
+    {
+        "label": "Politiche della Casa: Sostegno all'affitto",
+        "value": "905"
+    },
+    {
+        "label": "Politiche della Casa: Assegnazione alloggi",
+        "value": "906"
+    },
+    {
+        "label": "Politiche della Casa: Bollettazione canoni affitto",
+        "value": "907"
+    },
+    {
+        "label": "Politiche della Casa: Emergenza abitativa (mancanza alloggio per sfratto/vendita all'asta, ...)",
+        "value": "908"
+    },
+    {
+        "label": "Politiche della Casa: Bandi e graduatorie edilizia residenziale pubblica",
+        "value": "909"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche sociali relativi a minori",
+        "value": "915"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche sociali relativi a adulti",
+        "value": "916"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche sociali relativi a anziani",
+        "value": "917"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche sociali relativi a disabili",
+        "value": "918"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche sociali relativi a migranti",
+        "value": "919"
+    },
+    {
+        "label": "Politiche Sociali: Problematiche per CST",
+        "value": "920"
+    },
+    {
+        "label": "Polizia Locale: Veicoli abbandonati",
+        "value": "678"
+    },
+    {
+        "label": "Polizia Locale: Oggetti smarriti",
+        "value": "679"
+    },
+    {
+        "label": "Polizia Locale: Problemi alla circolazione/traffico/soste vietate",
+        "value": "680"
+    },
+    {
+        "label": "Polizia Locale: Animali vaganti pericolosi (cinghiali, serpenti, ..)",
+        "value": "688"
+    },
+    {
+        "label": "Polizia Locale: Movida/chiasso",
+        "value": "689"
+    },
+    {
+        "label": "Polizia Locale: Degrado (aspetti relativi alla sicurezza)",
+        "value": "691"
+    },
+    {
+        "label": "Polizia Locale: Pericolo",
+        "value": "692"
+    },
+    {
+        "label": "Polizia Locale: Problematiche e norme COVID",
+        "value": "1301"
+    },
+    {
+        "label": "Polizia Locale: Videosorveglianza",
+        "value": "3526"
+    },
+    {
+        "label": "Polizia Locale: Informazioni su Sanzioni/Verbali",
+        "value": "4766"
+    },
+    {
+        "label": "Polizia Locale: Situazioni pericolose strade",
+        "value": "9926"
+    },
+    {
+        "label": "Progettazione: Stato della progettazione di un'opera pubblica",
+        "value": "1071"
+    },
+    {
+        "label": "Rigenerazione urbana: Rigenerazione urbana",
+        "value": "861"
+    },
+    {
+        "label": "Rigenerazione urbana: Coordinamento attuazioni urbanistiche",
+        "value": "863"
+    },
+    {
+        "label": "Riqualificazione Urbana: Cantieri in corso riqualificazione urbana",
+        "value": "1087"
+    },
+    {
+        "label": "Risorse Umane: Concorsi",
+        "value": "1542"
+    },
+    {
+        "label": "Rivi: Vegetazione negli alvei dei torrenti",
+        "value": "986"
+    },
+    {
+        "label": "Rivi: Richiesta manutenzione straordinaria dei rivi",
+        "value": "987"
+    },
+    {
+        "label": "Scelte Strategiche: Scelte Strategiche",
+        "value": "6142"
+    },
+    {
+        "label": "Scuola: Nidi d'infanzia 0/3",
+        "value": "1195"
+    },
+    {
+        "label": "Scuola: Scuole d'infanzia 3/6",
+        "value": "1196"
+    },
+    {
+        "label": "Scuola: Iscrizioni Scuola 0/6",
+        "value": "1197"
+    },
+    {
+        "label": "Scuola: Diete/menà¹ scolastiche",
+        "value": "1198"
+    },
+    {
+        "label": "Scuola: Mensa Scolastica",
+        "value": "1199"
+    },
+    {
+        "label": "Scuola: Iscrizione Ristorazione",
+        "value": "1200"
+    },
+    {
+        "label": "Scuola: Domanda Agevolazione Tariffaria Servizi Scolastici",
+        "value": "1201"
+    },
+    {
+        "label": "Scuola: Bollettini Servizio Scuola",
+        "value": "1202"
+    },
+    {
+        "label": "Scuola: Alunni con disabilità ",
+        "value": "1203"
+    },
+    {
+        "label": "Scuola: Trasporto Scolastico",
+        "value": "1204"
+    },
+    {
+        "label": "Scuola: Borse di Studio",
+        "value": "1205"
+    },
+    {
+        "label": "Scuola: Manutenzione Edifici Scolastici",
+        "value": "1206"
+    },
+    {
+        "label": "Scuola: Aree Esterne Edifici Scolastici",
+        "value": "1207"
+    },
+    {
+        "label": "Scuola: Riscaldamento Edifici Scolastici",
+        "value": "1208"
+    },
+    {
+        "label": "Servizi civici: Cimiteri - manutenzioni (verde, struttura, pulizie)",
+        "value": "949"
+    },
+    {
+        "label": "Servizi civici: Servizi cimiteriali (ricerche, riesumazioni, acquisti, informazioni)",
+        "value": "950"
+    },
+    {
+        "label": "Servizi civici: Anagrafe - accesso ai servizi (prenotazione, orari, ...)",
+        "value": "952"
+    },
+    {
+        "label": "Servizi civici: Anagrafe - Residenza (variazioni, cancellazioni, ...)",
+        "value": "953"
+    },
+    {
+        "label": "Servizi civici: Anagrafe - servizi convenzionati per certificati (edicole, ACI)",
+        "value": "954"
+    },
+    {
+        "label": "Servizi civici: Anagrafe - Certificati (residenza, stato famiglia, notorietà )",
+        "value": "955"
+    },
+    {
+        "label": "Servizi civici: Elettorale - rilascio tessere elettorali",
+        "value": "956"
+    },
+    {
+        "label": "Servizi civici: Stato civile - certificati (nascita, matrimonio, morte)",
+        "value": "957"
+    },
+    {
+        "label": "Servizi civici: Stato civile - ricerche storiche",
+        "value": "958"
+    },
+    {
+        "label": "Servizi civici: Targhe toponomastiche",
+        "value": "79853"
+    },
+    {
+        "label": "Servizi Finanziari: Servizi Finanziari",
+        "value": "65864"
+    },
+    {
+        "label": "Sistemi Informativi: Geoportale",
+        "value": "1377"
+    },
+    {
+        "label": "Sistemi Informativi: Monic@ (autorizzazione occupazione/rottura suolo)",
+        "value": "1378"
+    },
+    {
+        "label": "Sistemi Informativi: Servizio online di certificati anagrafici e verifiche timbro digitale",
+        "value": "1379"
+    },
+    {
+        "label": "Sistemi Informativi: Piattaforma di autenticazione ai servizi del Comune",
+        "value": "1380"
+    },
+    {
+        "label": "Sistemi Informativi: Piattaforma per esposizione di appalti di Gara e Contratti",
+        "value": "1381"
+    },
+    {
+        "label": "Sistemi Informativi: Problemi tecnici/informatici sui pagamenti online PagoPA",
+        "value": "1382"
+    },
+    {
+        "label": "Sistemi Informativi: Fascicolo del cittadino",
+        "value": "1383"
+    },
+    {
+        "label": "Sistemi Informativi: Portale iscrizione ai servizi di allerta meteo, allerta sosta, allerta acqua",
+        "value": "1426"
+    },
+    {
+        "label": "Sistemi Informativi: Servizi sms del Comune di Genova",
+        "value": "1427"
+    },
+    {
+        "label": "Sistemi Informativi: Albo pretorio on line",
+        "value": "1428"
+    },
+    {
+        "label": "Sistemi Informativi: Problemi informatici consultazione storico delibere",
+        "value": "1429"
+    },
+    {
+        "label": "Sistemi Informativi: Sito Web Istituzionale",
+        "value": "1521"
+    },
+    {
+        "label": "Sistemi Informativi: SegnalaCi",
+        "value": "1794"
+    },
+    {
+        "label": "Sistemi Informativi: Reti Wifi",
+        "value": "19518"
+    },
+    {
+        "label": "Sistemi Informativi: Sportello Telematico",
+        "value": "44019"
+    },
+    {
+        "label": "Spiagge: Spiagge - richieste rimodellamenti, ripascimenti, apertura barre di foce",
+        "value": "989"
+    },
+    {
+        "label": "Spiagge: Spiagge - pulizia da alghe o legname trasportato dalle mareggiate",
+        "value": "990"
+    },
+    {
+        "label": "Sport: Problematiche strutturali di Impianti Sportivi (sicurezza, perdite, allagamenti)",
+        "value": "1173"
+    },
+    {
+        "label": "Sport: Richieste relative ad attivita sportive di genitori con figli disabili",
+        "value": "1174"
+    },
+    {
+        "label": "Turismo: Itinerari Turistici",
+        "value": "1058"
+    },
+    {
+        "label": "Turismo: Strutture Ricettive",
+        "value": "1059"
+    },
+    {
+        "label": "Turismo: Tassa di Soggiorno",
+        "value": "1060"
+    },
+    {
+        "label": "Turismo: Prodotti e Servizi turistici/Portale Genova City Pass",
+        "value": "1061"
+    },
+    {
+        "label": "Turismo: Segnaletica Turistica",
+        "value": "1062"
+    },
+    {
+        "label": "Turismo: Strutture ricettive non mappate sul Geoportale",
+        "value": "8662"
+    },
+    {
+        "label": "Urbanistica: Nuova normativa Edilizia (bonus 110%, bonus facciate, etc.)",
+        "value": "1225"
+    },
+    {
+        "label": "Urbanistica: Cambio di destinazione d'uso o uso consentito di un immobile",
+        "value": "1227"
+    },
+    {
+        "label": "Urbanistica: Verifica di un immobile in area esondabile o franosa",
+        "value": "1231"
+    },
+    {
+        "label": "Urbanistica: Svincolo posto auto asservito",
+        "value": "1232"
+    },
+    {
+        "label": "Urbanistica: Compatibilità con il PUC per apertura altre attività industriali o artigianali",
+        "value": "1233"
+    },
+    {
+        "label": "Urbanistica: Certificati di Destinazione Urbanistica (CDU)",
+        "value": "1235"
+    },
+    {
+        "label": "Urbanistica: Eliminazione di un albero nel proprio giardino",
+        "value": "1236"
+    },
+    {
+        "label": "Urbanistica: Domanda su immobile/opera in area soggetta a tutela paesaggistica",
+        "value": "1237"
+    },
+    {
+        "label": "Urbanistica: Cambiamento di colore ai prospetti di un edificio",
+        "value": "1238"
+    },
+    {
+        "label": "nan: Carta Servizi",
+        "value": "16813"
+    }
+]

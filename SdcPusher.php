@@ -42,6 +42,8 @@ class SensorSdcPusher
      */
     private $password;
 
+    public static $categories = [];
+
     public static function instance(string $baseUri, string $username, string $password): SensorSdcPusher
     {
         if (self::$instance === null) {
