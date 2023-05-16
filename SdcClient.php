@@ -176,7 +176,7 @@ class SdcClient
             $fileContents = '[File not found]';
             $size = mb_strlen($fileContents);
         }
-        SensorSdcPusher::debug("  - Put file to " . substr($fileInfo['uri'], 0, 100);
+        SensorSdcPusher::debug("  - Put file to " . substr($fileInfo['uri'], 0, 100));
         $curl = curl_init();
         $curlOptions = [
             CURLOPT_URL => $fileInfo['uri'],

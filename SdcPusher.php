@@ -123,12 +123,12 @@ class SensorSdcPusher
         $this->setClient();
     }
 
-    private function setClient(bool $withoutCache = null)
+    private function setClient(bool $useCache = true)
     {
-        if ($withoutCache){
+        if (!$useCache){
             SensorSdcPusher::warning('Ignore cache for current post #' . $this->ignoreCacheForId);
         }
-        if (self::$useCache && $withoutCache === null) {
+        if (self::$useCache && $useCache) {
             $this->client = new SdcCachedClient(
                 new SdcClient($this->baseUri, $this->username, $this->password)
             );
@@ -148,9 +148,9 @@ class SensorSdcPusher
         return $this->client->getAccessToken();
     }
 
-    private function ignoreCacheForCurrentId(): bool
+    private function useCacheForCurrentId(): bool
     {
-        return (int)$this->ignoreCacheForId === (int)$this->currentId;
+        return (int)$this->ignoreCacheForId !== (int)$this->currentId;
     }
 
     public function push(
@@ -167,7 +167,7 @@ class SensorSdcPusher
             'user' => null,
         ];
         $this->currentId = $post->id;
-        $this->setClient($this->ignoreCacheForCurrentId());
+        $this->setClient($this->useCacheForCurrentId());
         SensorSdcPusher::debug("Working on post $post->id", false);
 //        if (SensorSdcPusher::isDebugEnable()) SensorSdcPusher::debug(json_encode($post));
         $userData = $this->pushUser($post->author);
@@ -198,7 +198,7 @@ class SensorSdcPusher
             $serviceId,
             $pdfFileRelativePath
         );
-        SensorSdcPusher::debug("Remote application id is " . $data['id']);
+        SensorSdcPusher::warning("Remote application id is " . $data['id']);
         $this->currentPost['application'] = $data['id'];
         SensorSdcPusher::warningOnDebug(json_encode($data));
 
