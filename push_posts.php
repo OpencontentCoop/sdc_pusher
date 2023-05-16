@@ -30,6 +30,8 @@ $options = $script->getOptions(
 $script->initialize();
 $script->setUseDebugAccumulators(true);
 
+$startTotalTime = time();
+
 $user = eZUser::fetchByName('admin');
 eZUser::setCurrentlyLoggedInUser($user, $user->attribute('contentobject_id'));
 $cli = eZCLI::instance();
@@ -252,6 +254,9 @@ try {
         }
         $cli->output();
     }
+
+    $endTotalTime = time();
+    $cli->output('Elapsed: ' . ($endTotalTime - $startTotalTime) . ' secs');
 
     $script->shutdown();
 } catch (Throwable $e) {
