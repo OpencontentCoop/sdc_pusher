@@ -33,6 +33,7 @@ class SdcPostSerializer
             'modified_at' => $post->modified->format('c'),
             'sensor_category' => count($post->categories) > 0 ? $post->categories[0]->name : null,
             'sensor_area' => count($post->areas) > 0 ? $post->areas[0]->name : null,
+            'micromacrocategory' => $microMacro,
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
         ];
@@ -82,7 +83,7 @@ class SdcPostSerializer
         ];
 
 //        $strict = false;
-        if ($microMacro){
+        if ($microMacro && isset($mapMicroMacroHash[$microMacro])){
 //            $setMm = true;
 //            if ($strict && !isset($mapMicroMacroHash[$microMacro])){
 //                $setMm = false;
