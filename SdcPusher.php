@@ -168,10 +168,11 @@ class SensorSdcPusher
             if ($read && $read->published instanceof DateTime) {
                 $dateTime = $read->published->format('c');
             }
-            SensorSdcPusher::debug("Assign to default office if needed");
             if ($post->status->identifier === 'close') {
+                SensorSdcPusher::debug("Assign to default office and operator if needed");
                 $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
             } else {
+                SensorSdcPusher::debug("Assign to default office if needed");
                 $this->client->assign($data['id'], $officeId, $dateTime);
             }
         }
