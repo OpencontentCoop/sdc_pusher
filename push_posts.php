@@ -218,10 +218,8 @@ try {
         $cli->warning('Now push assignments and comments');
 
         $countDelayForComments = count($delayForComments);
-        if ($countDelayForComments < 10) {
-            $cli->output("Wait for $sleepSecs secs");
-            sleep($sleepSecs);
-        }
+        $cli->output("Wait for $sleepSecs secs");
+        sleep($sleepSecs);
 
         if (!$verbose) {
             $output = new ezcConsoleOutput();
