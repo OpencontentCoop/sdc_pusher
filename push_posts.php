@@ -188,7 +188,10 @@ try {
 
         eZContentObject::clearCache();
     }
-
+    if (count($delayForComments) < 10){
+        $cli->output('... zzz ...');
+        sleep(10);
+    }
     foreach ($delayForComments as $item) {
         $pusher->push(
             $item['post'],
