@@ -68,7 +68,7 @@ try {
 
     if (!$options['no-dev']) {
         $pusher::enableDevMode();
-    }else{
+    } else {
         $cli->warning('Run in production mode');
         $pusher::disableDevMode();
     }
@@ -140,10 +140,11 @@ try {
     }
 
     $stats = [];
+    $delayForComments = [];
     foreach ($objects as $index => $object) {
         if (!$verbose) {
             $progressBar->advance();
-        }else{
+        } else {
             $cli->output();
             $i = $index + 1;
             $cli->warning("$i/$objectsCount Post #" . $object['id']);
@@ -170,15 +171,34 @@ try {
             eZDir::mkdir(dirname($pdfFilePath), false, true);
             file_put_contents($pdfFilePath, $pdf);
             $cli->warning('stored');
-        }else{
+        } else {
             $cli->output('already stored');
         }
         if (!$options['dry-run']) {
-            $pusher->push($post, $serviceId, $pushComments, $pushBinaries, $pdfFileRelativePath, $officeId, $operatorId);
+            $delayForComments[$post->id] = [
+                'post' => $post,
+                'serviceId' => $serviceId,
+                'pdfFileRelativePath' => $pdfFileRelativePath,
+                'officeId' => $officeId,
+                'operatorId' => $operatorId,
+            ];
+            $pusher->push($post, $serviceId, false, $pushBinaries, $pdfFileRelativePath, $officeId, $operatorId);
         }
         $stats++;
 
         eZContentObject::clearCache();
+    }
+
+    foreach ($delayForComments as $item) {
+        $pusher->push(
+            $item['post'],
+            $item['serviceId'],
+            true,
+            false,
+            $item['pdfFileRelativePath'],
+            $item['officeId'],
+            $item['operatorId']
+        );
     }
 
     if (!$verbose) {
