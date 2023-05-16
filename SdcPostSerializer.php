@@ -1019,7 +1019,7 @@ class SdcPostSerializer
 //                "type" => "70cbba61-47e4-4d85-98bf-03e4817cf272",
                 "details" => $post->description,
                 "subject" => $post->subject,
-                "_meta" => $missing,
+                "meta" => $missing,
             ],
         ];
 
