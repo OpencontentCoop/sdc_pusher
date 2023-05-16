@@ -239,8 +239,6 @@ class SensorSdcPusher
                 $responseData = $this->client->accept($data['id'], $message);
                 SensorSdcPusher::warningOnDebug(json_encode($responseData));
             }
-        }else{
-            SensorSdcPusher::warning('... da ripassare senza -no-comments');
         }
 
 

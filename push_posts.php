@@ -188,11 +188,36 @@ try {
 
         eZContentObject::clearCache();
     }
-    if (count($delayForComments) < 10){
+    if (!$verbose) {
+        $progressBar->finish();
+    }
+
+    $cli->output();
+    $cli->output('Now push assignments and comments');
+    $cli->output();
+
+    $countDelayForComments = count($delayForComments);
+    if ($countDelayForComments < 10){
         $cli->output('... zzz ...');
         sleep(10);
     }
-    foreach ($delayForComments as $item) {
+
+    if (!$verbose) {
+        $output = new ezcConsoleOutput();
+        $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
+        $progressBar = new ezcConsoleProgressbar($output, $countDelayForComments, $progressBarOptions);
+        $progressBar->start();
+    }
+
+    $i = 1;
+    foreach ($delayForComments as $id => $item) {
+        $i++;
+        if (!$verbose) {
+            $progressBar->advance();
+        } else {
+            $cli->output();
+            $cli->warning("$i/$countDelayForComments Post #" . $id);
+        }
         $pusher->push(
             $item['post'],
             $item['serviceId'],
@@ -203,7 +228,6 @@ try {
             $item['operatorId']
         );
     }
-
     if (!$verbose) {
         $progressBar->finish();
     }
