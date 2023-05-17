@@ -148,66 +148,73 @@ try {
     $delayForComments = [];
     $i = 0;
     foreach ($objects as $index => $object) {
-        $startTime = time();
-        if (!$verbose) {
-            $progressBar->advance();
-        } else {
-            $cli->output();
-            $i++;
-            $cli->warning("$i/$objectsCount Post #" . $object['id']);
-        }
-
+        $i++;
         try {
-            $post = $repository->getPostService()->loadPost((int)$object['id']);
-        } catch (Exception $e) {
-            $cli->error($e->getMessage());
-            continue;
-        }
+            $startTime = time();
+            if (!$verbose) {
+                $progressBar->advance();
+            } else {
+                $cli->output();
+                $cli->warning("$i/$objectsCount Post #" . $object['id']);
+            }
 
-        $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
-        $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
-        $pdfFilePath = __DIR__ . $pdfFileRelativePath;
-        if ($verbose) {
-            $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
-        }
-        if (!file_exists($pdfFilePath)) {
+            try {
+                $post = $repository->getPostService()->loadPost((int)$object['id']);
+            } catch (Exception $e) {
+                $cli->error($e->getMessage());
+                continue;
+            }
+
+            $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
+            $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
+            $pdfFilePath = __DIR__ . $pdfFileRelativePath;
+            if ($verbose) {
+                $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
+            }
+            if (!file_exists($pdfFilePath)) {
 //          $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id);
-            $pdf = shell_exec(
-                'php /mnt/efs/cluster-openpa/migration/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id
-            );
-            eZDir::mkdir(dirname($pdfFilePath), false, true);
-            file_put_contents($pdfFilePath, $pdf);
-            if ($verbose) {
-                $cli->warning('stored');
+                $pdf = shell_exec(
+                    'php /mnt/efs/cluster-openpa/migration/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id
+                );
+                eZDir::mkdir(dirname($pdfFilePath), false, true);
+                file_put_contents($pdfFilePath, $pdf);
+                if ($verbose) {
+                    $cli->warning('stored');
+                }
+            } else {
+                if ($verbose) {
+                    $cli->output('already stored');
+                }
             }
-        } else {
-            if ($verbose) {
-                $cli->output('already stored');
+            if (!$options['dry-run']) {
+                $delayForComments[$post->id] = [
+                    'post' => $post,
+                    'serviceId' => $serviceId,
+                    'pdfFileRelativePath' => $pdfFileRelativePath,
+                    'officeId' => $officeId,
+                    'operatorId' => $operatorId,
+                ];
+                $pusher->push(
+                    $post,
+                    $serviceId,
+                    false,
+                    $pushBinaries,
+                    $pdfFileRelativePath,
+                    $officeId,
+                    $operatorId
+                );
             }
-        }
-        if (!$options['dry-run']) {
-            $delayForComments[$post->id] = [
-                'post' => $post,
-                'serviceId' => $serviceId,
-                'pdfFileRelativePath' => $pdfFileRelativePath,
-                'officeId' => $officeId,
-                'operatorId' => $operatorId,
-            ];
-            $pusher->push(
-                $post,
-                $serviceId,
-                false,
-                $pushBinaries,
-                $pdfFileRelativePath,
-                $officeId,
-                $operatorId
-            );
-        }
-        $stats++;
-        eZContentObject::clearCache();
-        $endTime = time();
-        if ($verbose){
-            $cli->output('Elapsed: ' . ($endTime - $startTime) . ' secs');
+            $stats++;
+            eZContentObject::clearCache();
+            $endTime = time();
+            if ($verbose) {
+                $cli->output('Elapsed: ' . ($endTime - $startTime) . ' secs');
+            }
+        } catch (Exception $e) {
+            eZLog::write($object['id'] . " " . $e->getMessage(), 'sdc_push.log');
+            if ($verbose) {
+                $cli->error('#' . $object['id'] . ' ' . $e->getMessage());
+            }
         }
     }
     if (!$verbose) {
@@ -233,21 +240,30 @@ try {
         $i = 0;
         foreach ($delayForComments as $id => $item) {
             $i++;
-            if (!$verbose) {
-                $progressBar->advance();
-            } else {
-                $cli->output();
-                $cli->warning("$i/$countDelayForComments Post #" . $id);
+            try {
+                if (!$verbose) {
+                    $progressBar->advance();
+                } else {
+                    $cli->output();
+                    $cli->warning("$i/$countDelayForComments Post #" . $id);
+                }
+                if (!$options['dry-run']) {
+                    $pusher->push(
+                        $item['post'],
+                        $item['serviceId'],
+                        true,
+                        false,
+                        $item['pdfFileRelativePath'],
+                        $item['officeId'],
+                        $item['operatorId']
+                    );
+                }
+            } catch (Exception $e) {
+                eZLog::write("$id " . $e->getMessage(), 'sdc_push.log');
+                if ($verbose) {
+                    $cli->error('#' . $post->id . ' ' . $e->getMessage());
+                }
             }
-            $pusher->push(
-                $item['post'],
-                $item['serviceId'],
-                true,
-                false,
-                $item['pdfFileRelativePath'],
-                $item['officeId'],
-                $item['operatorId']
-            );
         }
         if (!$verbose) {
             $progressBar->finish();
