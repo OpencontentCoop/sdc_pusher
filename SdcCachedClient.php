@@ -39,7 +39,7 @@ class SdcCachedClient
         if (!$payload instanceof SdcPayload || $this->writeOnly) {
             $data = call_user_func($callBack);
             $payload = SdcPayload::create(
-                $id,
+                (string)$id,
                 $type,
                 $data
             );
