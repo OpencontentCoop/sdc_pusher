@@ -151,7 +151,9 @@ class SdcClient
         unset($data['_handler']);
 
         if (!$handler->exists()){
-            throw new Exception("File $handler->filePath not found");
+            //throw new Exception
+            SensorSdcPusher::error("File $handler->filePath not found");
+            return [];
         }
 
         SensorSdcPusher::debug("  - Get upload pre-signed uri for " . $data['name']);
