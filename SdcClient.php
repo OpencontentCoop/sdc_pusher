@@ -281,8 +281,36 @@ class SdcClient
         return false;
     }
 
+    public function getApplication($applicationId)
+    {
+        $response = (string)$this->client->request(
+            'GET',
+            $this->apiUri . '/applications/' . $applicationId,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                ]
+            ]
+        )->getBody();
+
+        return (array)json_decode($response, true);
+    }
+
     public function assign($applicationId, $officeId, $dateTime = null, $operatorId = null)
     {
+        $application = $this->getApplication($applicationId);
+
+        if ($operatorId !== null
+            && isset($application['operator_id'])
+            && $application['operator_id'] == $operatorId) {
+            return $application;
+        }
+
+        if (isset($application['user_group_id'])
+            && $application['user_group_id'] === $officeId) {
+            return $application;
+        }
+
         $data = [
             'user_group_id' => $officeId,
         ];
@@ -310,6 +338,11 @@ class SdcClient
 
     public function accept($applicationId, $message)
     {
+        $application = $this->getApplication($applicationId);
+        if ((int)$application['status'] >= 7000){
+            return $application;
+        }
+
         $data = [
             'message' => $message
         ];
