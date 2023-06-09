@@ -17,10 +17,11 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:][skip-file]',
     '',
     [
         'id' => 'Filter by post id',
+        'file' => 'Read id list from file (one per line)',
         'only-closed' => 'Push only closed',
         'clear' => 'Clear table cache before run',
         'no-comments' => 'Skip pushing comments',
@@ -32,15 +33,18 @@ $script->setUseDebugAccumulators(true);
 
 $startTotalTime = time();
 
+/** @var eZUser $user */
 $user = eZUser::fetchByName('admin');
 eZUser::setCurrentlyLoggedInUser($user, $user->attribute('contentobject_id'));
 $cli = eZCLI::instance();
+
 $baseUri = $options['baseurl'];
 $username = $options['username'];
 $password = $options['password'];
 $verbose = $options['verbose'];
 $debug = $options['debug'];
 $sleepSecs = $options['sleep'] ? (int)$options['sleep'] : 20;
+$skipFile = $options['skip-file'];
 
 $serviceId = $options['service'] ?? "inefficiencies";
 $cli->warning('Use service ' . $serviceId);
@@ -55,7 +59,10 @@ $offset = (int)$options['offset'];
 $pushComments = !($options['no-comments']);
 $pushBinaries = !($options['no-files']);
 
-SensorSdcPusher::$categories = json_decode(file_get_contents(__DIR__ . '/categories.json'), true);
+$slackToken = "xoxp-64363557461-64368677265-585209079173-7df714db4ba130f02acc96558fb9cbeb";
+$slackChannel = "#saasopenpa-ansible-tools";
+
+//SensorSdcPusher::$categories = json_decode(file_get_contents(__DIR__ . '/categories.json'), true);
 
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
@@ -97,21 +104,32 @@ try {
     }
 
     $repository = OpenPaSensorRepository::instance();
-
-    $closeStateIdList = $openStateIdList = [];
-    $states = $repository->getSensorPostStates('sensor');
-    foreach ($states as $state) {
-        if ($state->attribute('identifier') === 'close') {
-            $closeStateIdList[] = $state->attribute('id');
-        } else {
-            $openStateIdList[] = $state->attribute('id');
+    if ($options['file']) {
+        $objects = [];
+        $fn = fopen($options['file'],"r");
+        while(!feof($fn))  {
+            $result = fgets($fn);
+            if (is_numeric($result)) {
+                $objects[] = ['id' => $result];
+            }
         }
-    }
-    $filterStateIdList = $options['only-closed'] ? $closeStateIdList : $openStateIdList;
+        fclose($fn);
 
-    if ($options['id']) {
+    } elseif ($options['id']) {
         $objects = [eZContentObject::fetch((int)$options['id'], false)];
+
     } else {
+        $closeStateIdList = $openStateIdList = [];
+        $states = $repository->getSensorPostStates('sensor');
+        foreach ($states as $state) {
+            if ($state->attribute('identifier') === 'close') {
+                $closeStateIdList[] = $state->attribute('id');
+            } else {
+                $openStateIdList[] = $state->attribute('id');
+            }
+        }
+        $filterStateIdList = $options['only-closed'] ? $closeStateIdList : $openStateIdList;
+
         $cli->output('Fetching objects... ', false);
         $limits = $limit > 0 ? ['limit' => $limit, 'offset' => $offset] : null;
         $conditions = [
@@ -134,6 +152,7 @@ try {
             ) . ')'
         );
     }
+
     $objectsCount = count($objects);
     $cli->warning('Now push ' . $objectsCount . ' post(s)');
 
@@ -151,6 +170,7 @@ try {
         $i++;
         try {
             $startTime = time();
+
             if (!$verbose) {
                 $progressBar->advance();
             } else {
@@ -161,31 +181,41 @@ try {
             try {
                 $post = $repository->getPostService()->loadPost((int)$object['id']);
             } catch (Exception $e) {
-                $cli->error($e->getMessage());
+                if (!$verbose) {
+                    $cli->error($e->getMessage());
+                }
+                SensorSdcPusher::notify(
+                    $slackToken,
+                    $slackChannel,
+                    'Error on post ' . $object['id'] . ': ' . $e->getMessage()
+                );
                 continue;
             }
 
             $pdfDirectory = SdcPostSerializer::serializaPdfDirectory($post);
             $pdfFileRelativePath = '/pdf/' . $pdfDirectory . '/' . $post->id . '.pdf';
             $pdfFilePath = __DIR__ . $pdfFileRelativePath;
-            if ($verbose) {
-                $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
-            }
-            if (!file_exists($pdfFilePath)) {
-//          $pdf = shell_exec('php extension/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id);
-                $pdf = shell_exec(
-                    'php /mnt/efs/cluster-openpa/migration/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id
-                );
-                eZDir::mkdir(dirname($pdfFilePath), false, true);
-                file_put_contents($pdfFilePath, $pdf);
+
+            if (!$skipFile) {
                 if ($verbose) {
-                    $cli->warning('stored');
+                    $cli->output($object['id'] . " ({$post->status->identifier}) $pdfFilePath ", false);
                 }
-            } else {
-                if ($verbose) {
-                    $cli->output('already stored');
+                if (!file_exists($pdfFilePath)) {
+                    $pdf = shell_exec(
+                        'php /mnt/efs/cluster-openpa/migration/sdc_pusher/generate_pdf.php -sbackend -q --id=' . $post->id
+                    );
+                    eZDir::mkdir(dirname($pdfFilePath), false, true);
+                    file_put_contents($pdfFilePath, $pdf);
+                    if ($verbose) {
+                        $cli->warning('stored');
+                    }
+                } else {
+                    if ($verbose) {
+                        $cli->output('already stored');
+                    }
                 }
             }
+
             if (!$options['dry-run']) {
                 $delayForComments[$post->id] = [
                     'post' => $post,
@@ -215,6 +245,11 @@ try {
             if ($verbose) {
                 $cli->error('#' . $object['id'] . ' ' . $e->getMessage());
             }
+            SensorSdcPusher::notify(
+                $slackToken,
+                $slackChannel,
+                'Error on post ' . $object['id'] . ': ' . $e->getMessage()
+            );
         }
     }
     if (!$verbose) {
@@ -263,6 +298,11 @@ try {
                 if ($verbose) {
                     $cli->error('#' . $post->id . ' ' . $e->getMessage());
                 }
+                SensorSdcPusher::notify(
+                    $slackToken,
+                    $slackChannel,
+                    'Error on post ' . $post->id . ': ' . $e->getMessage()
+                );
             }
         }
         if (!$verbose) {
@@ -275,6 +315,7 @@ try {
     $cli->output('Elapsed: ' . ($endTotalTime - $startTotalTime) . ' secs');
 
     $script->shutdown();
+
 } catch (Throwable $e) {
     $errCode = $e->getCode();
     $errCode = $errCode != 0 ? $errCode : 1; // If an error has occured, script must terminate with a status other than 0

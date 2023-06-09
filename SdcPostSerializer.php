@@ -11,22 +11,21 @@ class SdcPostSerializer
 
     public function serialize(Post $post, array $userData, array $images, array $files, string $serviceId = "inefficiencies", $pdfFileRelativePath = null): array
     {
-        $mapMicroMacro = SensorSdcPusher::$categories;
-        $mapMicroMacroHash = array_combine(
-            array_column($mapMicroMacro, 'label'),
-            array_column($mapMicroMacro, 'value')
-        );
-
-        $microMacro = null;
-        if (count($post->categories) > 0){
-            $category = $post->categories[0];
-            if ($category->parent == 0){
-                $microMacro = "{$category->name}: {$category->name}";
-            }else{
-                $parentCategory = OpenPaSensorRepository::instance()->getCategoryService()->loadCategory($category->parent);
-                $microMacro = "{$parentCategory->name}: {$category->name}";
-            }
-        }
+//        $mapMicroMacro = SensorSdcPusher::$categories;
+//        $mapMicroMacroHash = array_combine(
+//            array_column($mapMicroMacro, 'label'),
+//            array_column($mapMicroMacro, 'value')
+//        );
+//        $microMacro = null;
+//        if (count($post->categories) > 0){
+//            $category = $post->categories[0];
+//            if ($category->parent == 0){
+//                $microMacro = "{$category->name}: {$category->name}";
+//            }else{
+//                $parentCategory = OpenPaSensorRepository::instance()->getCategoryService()->loadCategory($category->parent);
+//                $microMacro = "{$parentCategory->name}: {$category->name}";
+//            }
+//        }
 
         $missing = [
             'submitted_at' => $post->published->format('c'),
@@ -40,17 +39,6 @@ class SdcPostSerializer
         if (!empty($pdfFileRelativePath)){
            $missing['pdf_link'] = 'https://archivio-segnalazioni.comune.genova.it' . $pdfFileRelativePath;
         }
-
-//        $status = $post->status->identifier === 'pending' ? "1900" : "2000";
-//        if ($post->status->identifier === 'close'){
-//            $status = "7000";
-//        }
-//        if ($post->status->identifier === 'pending'){
-//            $status = "1900";
-//        }
-//        if ($post->status->identifier === 'open'){
-//            $status = "4000";
-//        }
 
         $data = [
             "service" => $serviceId,
@@ -77,24 +65,25 @@ class SdcPostSerializer
                 ],
 //                "type" => "70cbba61-47e4-4d85-98bf-03e4817cf272",
                 "details" => $post->description,
-                "subject" => $post->subject,
+                "subject" => $post->id . ' - ' . $post->subject,
                 "meta" => $missing,
+                "sequential_id" => $post->id,
             ],
         ];
 
 //        $strict = false;
-        if ($microMacro && isset($mapMicroMacroHash[$microMacro])){
+//        if ($microMacro && isset($mapMicroMacroHash[$microMacro])){
 //            $setMm = true;
 //            if ($strict && !isset($mapMicroMacroHash[$microMacro])){
 //                $setMm = false;
 //            }
 //            if ($setMm) {
-                $data['data']["micromacrocategory"] = [
-                    "label" => $microMacro,
-                    "value" => $mapMicroMacroHash[$microMacro] ?? ''
-                ];
+//                $data['data']["micromacrocategory"] = [
+//                    "label" => $microMacro,
+//                    "value" => $mapMicroMacroHash[$microMacro] ?? ''
+//                ];
 //            }
-        }
+//        }
 
         $data["data"]["images"] = $images;
         $data["data"]["docs"] = $files;
