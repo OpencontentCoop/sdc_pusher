@@ -110,14 +110,12 @@ try {
             die(1);
         }
         $objects = [];
-        $fn = fopen($options['file'],"r");
-        while(!feof($fn))  {
-            $result = fgets($fn);
-            if (is_numeric($result)) {
-                $objects[] = ['id' => $result];
+        $data = explode(PHP_EOL, file_get_contents($options['file']));
+        foreach ($data as $item) {
+            if (is_numeric($item)) {
+                $objects[] = ['id' => $item];
             }
         }
-        fclose($fn);
 
     } elseif ($options['id']) {
         $objects = [eZContentObject::fetch((int)$options['id'], false)];
