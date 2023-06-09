@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:][skip-file][file:]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:][skip-file][file:][slack-endpoint:]',
     '',
     [
         'id' => 'Filter by post id',
@@ -59,8 +59,7 @@ $offset = (int)$options['offset'];
 $pushComments = !($options['no-comments']);
 $pushBinaries = !($options['no-files']);
 
-$slackToken = "xoxp-64363557461-64368677265-585209079173-7df714db4ba130f02acc96558fb9cbeb";
-$slackChannel = "#saasopenpa-ansible-tools";
+$slackEndpoint = $options['slack-endpoint'];
 
 //SensorSdcPusher::$categories = json_decode(file_get_contents(__DIR__ . '/categories.json'), true);
 
@@ -187,8 +186,7 @@ try {
                     $cli->error($e->getMessage());
                 }
                 SensorSdcPusher::notify(
-                    $slackToken,
-                    $slackChannel,
+                    $slackEndpoint,
                     'Error on post ' . $object['id'] . ': ' . $e->getMessage()
                 );
                 continue;
@@ -248,8 +246,7 @@ try {
                 $cli->error('#' . $object['id'] . ' ' . $e->getMessage());
             }
             SensorSdcPusher::notify(
-                $slackToken,
-                $slackChannel,
+                $slackEndpoint,
                 'Error on post ' . $object['id'] . ': ' . $e->getMessage()
             );
         }
@@ -301,8 +298,7 @@ try {
                     $cli->error('#' . $post->id . ' ' . $e->getMessage());
                 }
                 SensorSdcPusher::notify(
-                    $slackToken,
-                    $slackChannel,
+                    $slackEndpoint,
                     'Error on post ' . $post->id . ': ' . $e->getMessage()
                 );
             }
