@@ -105,6 +105,10 @@ try {
 
     $repository = OpenPaSensorRepository::instance();
     if ($options['file']) {
+        if (!file_exists($options['file'])){
+            $cli->error('File not found: '. $options['file']);
+            die(1);
+        }
         $objects = [];
         $fn = fopen($options['file'],"r");
         while(!feof($fn))  {
