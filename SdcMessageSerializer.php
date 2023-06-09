@@ -12,11 +12,12 @@ class SdcMessageSerializer
             $visibility = 'applicant';
         }
 
+        $prefix = '';
         $createdAt = $message->published->format('d/m/Y H:i');
-        $prefix = '[' . $createdAt . ' - ' . $message->creator->name . ']: ';
+        //$prefix = '[' . $createdAt . ' - ' . $message->creator->name . ']: ';
         $author = null;
         if ($post->author->id == $message->creator->id && $remoteUserId){
-            $prefix = '';
+//            $prefix = '';
             $author = $remoteUserId;
         }
 
