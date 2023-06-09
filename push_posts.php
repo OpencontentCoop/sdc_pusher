@@ -17,7 +17,7 @@ $script = eZScript::instance([
 $script->startup();
 
 $options = $script->getOptions(
-    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:][skip-file]',
+    '[id:][clear][b:|baseurl:][u:|username:][p:|password:][service:][only-closed][no-comments][no-files][limit:][offset:][dry-run][office:][operator:][no-dev][clear-cache][sleep:][skip-file][file]',
     '',
     [
         'id' => 'Filter by post id',
