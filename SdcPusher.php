@@ -234,6 +234,10 @@ class SensorSdcPusher
                 $messageData = $this->pushMessage($data, $post, $message);
                 SensorSdcPusher::warningOnDebug(json_encode($messageData));
             }
+            foreach ($post->responses as $message) {
+                $messageData = $this->pushMessage($data, $post, $message);
+                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+            }
 
             if ($post->status->identifier === 'close') {
                 $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';

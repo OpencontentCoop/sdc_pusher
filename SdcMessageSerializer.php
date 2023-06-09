@@ -7,7 +7,10 @@ class SdcMessageSerializer
 {
     public function serialize(Post $post, Message $message, $remoteUserId = null)
     {
-        $visibility = $message instanceof Message\Comment ? 'applicant' : 'internal';
+        $visibility = 'internal';
+        if ($message instanceof Message\Comment || $message instanceof Message\Response){
+            $visibility = 'applicant';
+        }
 
         $createdAt = $message->published->format('d/m/Y H:i');
         $prefix = '[' . $createdAt . ' - ' . $message->creator->name . ']: ';
