@@ -111,7 +111,8 @@ try {
         $objects = [];
         $data = explode(PHP_EOL, file_get_contents($options['file']));
         foreach ($data as $item) {
-            if (is_numeric($item)) {
+            $item = (int)$item;
+            if ($item > 0) {
                 $objects[] = ['id' => $item];
             }
         }
