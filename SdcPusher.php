@@ -278,7 +278,7 @@ class SensorSdcPusher
             'pratica_id' => $application['id'],
             'message' => $data['message'],
             'visibility' => $data['visibility'],
-            'created_at' => $message->published,
+            'created_at' => $message->published->format('U'),
             'protocol_required' => false,
         ];
 
