@@ -276,7 +276,7 @@ class SensorSdcPusher
 
             $row = [
                 'id' => Ramsey\Uuid\Uuid::uuid4(),
-                'user_id' => $this->currentPost['user'] ?? $operatorId,
+                'user_id' => $data['author_id'] ?? $operatorId,
                 'pratica_id' => $application['id'],
                 'message' => $data['message'],
                 'visibility' => $data['visibility'],
