@@ -106,7 +106,7 @@ class SdcPostSerializer
             $address = $nominatim['address'] ?? [];
             if (isset($address['road']) && isset($address['house_number'])){
                 if (strpos($address['road'], ' ' . $address['house_number']) === false) {
-                    $address['road'] = $address['road'] . ' ' . $address['road'];
+                    $address['road'] = $address['road'] . ' ' . $address['house_number'];
                 }
             }
 
