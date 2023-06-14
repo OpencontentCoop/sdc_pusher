@@ -251,11 +251,11 @@ class SensorSdcPusher
         $file = new SplFileObject('/mnt/efs/cluster-openpa/migration/sdc_pusher/messages.csv', 'a');
         foreach ($post->comments as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
-            $file->fputcsv(array_values($messageCsv));
+            $file->fputcsv(array_values($messageCsv), '|');
         }
         foreach ($post->responses as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
-            $file->fputcsv(array_values($messageCsv));
+            $file->fputcsv(array_values($messageCsv), '|');
         }
 
 
@@ -269,30 +269,29 @@ class SensorSdcPusher
 
     private function buildMessageQuery(array $application, Post $post, Message $message, $operatorId)
     {
-        $messageSerializer = new SdcMessageSerializer();
-        $data = $messageSerializer->serialize($post, $message, $this->currentPost['user']);
-
-        $row = [
-            'id' => Ramsey\Uuid\Uuid::uuid4(),
-            'user_id' => $this->currentPost['user'] ?? $operatorId,
-            'pratica_id' => $application['id'],
-            'message' => $data['message'],
-            'visibility' => $data['visibility'],
-            'created_at' => $message->published->format('U'),
-            'protocol_required' => false,
-        ];
-
         $payload = SdcPayload::fetchByIdAndType($message->id, 'csv_message');
         if (!$payload instanceof SdcPayload) {
+            $messageSerializer = new SdcMessageSerializer();
+            $data = $messageSerializer->serialize($post, $message, $this->currentPost['user']);
+
+            $row = [
+                'id' => Ramsey\Uuid\Uuid::uuid4(),
+                'user_id' => $this->currentPost['user'] ?? $operatorId,
+                'pratica_id' => $application['id'],
+                'message' => $data['message'],
+                'visibility' => $data['visibility'],
+                'created_at' => $message->published->format('U'),
+                'protocol_required' => false,
+            ];
             SensorSdcPusher::warningOnDebug(json_encode($row));
-            SdcPayload::create(
+            $payload = SdcPayload::create(
                 (string)$message->id,
                 'csv_message',
                 $row
             );
         }
 
-        return $row;
+        return $payload->getPayload();
     }
 
     public function pushUser(User $user): array
