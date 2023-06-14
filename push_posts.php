@@ -228,7 +228,7 @@ try {
                 $pusher->push(
                     $post,
                     $serviceId,
-                    'build-query',
+                    false,
                     $pushBinaries,
                     $pdfFileRelativePath,
                     $officeId,
@@ -256,60 +256,60 @@ try {
         $progressBar->finish();
     }
 
-    if ($pushComments) {
-        $cli->output();
-        $cli->output();
-        $cli->warning('Now push assignments and comments');
-
-        $countDelayForComments = count($delayForComments);
-        $cli->output("Wait for $sleepSecs secs");
-        sleep($sleepSecs);
-
-        if (!$verbose) {
-            $output = new ezcConsoleOutput();
-            $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
-            $progressBar = new ezcConsoleProgressbar($output, $countDelayForComments, $progressBarOptions);
-            $progressBar->start();
-        }
-
-        $i = 0;
-        foreach ($delayForComments as $id => $item) {
-            $i++;
-            try {
-                if (!$verbose) {
-                    $progressBar->advance();
-                } else {
-                    $cli->output();
-                    $cli->warning("$i/$countDelayForComments Post #" . $id);
-                }
-                if (!$options['dry-run']) {
-                    $pusher->push(
-                        $item['post'],
-                        $item['serviceId'],
-                        true,
-                        false,
-                        $item['pdfFileRelativePath'],
-                        $item['officeId'],
-                        $item['operatorId']
-                    );
-                }
-
-            } catch (Exception $e) {
-                eZLog::write("$id " . $e->getMessage(), 'sdc_push.log');
-                if ($verbose) {
-                    $cli->error('#' . $post->id . ' ' . $e->getMessage());
-                }
-                SensorSdcPusher::notify(
-                    $slackEndpoint,
-                    'Error on post ' . $post->id . ': ' . $e->getMessage()
-                );
-            }
-        }
-        if (!$verbose) {
-            $progressBar->finish();
-        }
-        $cli->output();
-    }
+//    if ($pushComments) {
+//        $cli->output();
+//        $cli->output();
+//        $cli->warning('Now push assignments and comments');
+//
+//        $countDelayForComments = count($delayForComments);
+//        $cli->output("Wait for $sleepSecs secs");
+//        sleep($sleepSecs);
+//
+//        if (!$verbose) {
+//            $output = new ezcConsoleOutput();
+//            $progressBarOptions = ['emptyChar' => ' ', 'barChar' => '='];
+//            $progressBar = new ezcConsoleProgressbar($output, $countDelayForComments, $progressBarOptions);
+//            $progressBar->start();
+//        }
+//
+//        $i = 0;
+//        foreach ($delayForComments as $id => $item) {
+//            $i++;
+//            try {
+//                if (!$verbose) {
+//                    $progressBar->advance();
+//                } else {
+//                    $cli->output();
+//                    $cli->warning("$i/$countDelayForComments Post #" . $id);
+//                }
+//                if (!$options['dry-run']) {
+//                    $pusher->push(
+//                        $item['post'],
+//                        $item['serviceId'],
+//                        true,
+//                        false,
+//                        $item['pdfFileRelativePath'],
+//                        $item['officeId'],
+//                        $item['operatorId']
+//                    );
+//                }
+//
+//            } catch (Exception $e) {
+//                eZLog::write("$id " . $e->getMessage(), 'sdc_push.log');
+//                if ($verbose) {
+//                    $cli->error('#' . $post->id . ' ' . $e->getMessage());
+//                }
+//                SensorSdcPusher::notify(
+//                    $slackEndpoint,
+//                    'Error on post ' . $post->id . ': ' . $e->getMessage()
+//                );
+//            }
+//        }
+//        if (!$verbose) {
+//            $progressBar->finish();
+//        }
+//        $cli->output();
+//    }
 
     $endTotalTime = time();
     $cli->output('Elapsed: ' . ($endTotalTime - $startTotalTime) . ' secs');

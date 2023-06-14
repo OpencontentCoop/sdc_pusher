@@ -214,47 +214,50 @@ class SensorSdcPusher
             || $post->status->identifier === 'close'
             || $post->comments->count() > 0;
 
-        if ($pushComments === true) {
-            if ($needAssign) {
-                $dateTime = null;
-                $read = $post->timelineItems->getByType('read')->first();
-                if ($read && $read->published instanceof DateTime) {
-                    $dateTime = $read->published->format('c');
-                }
-                if ($post->status->identifier === 'close') {
-                    SensorSdcPusher::debug("Assign to default office and operator if needed");
-                    $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
-                } else {
-                    SensorSdcPusher::debug("Assign to default office if needed");
-                    $this->client->assign($data['id'], $officeId, $dateTime);
-                }
-            }
 
-            foreach ($post->comments as $message) {
-                $messageData = $this->pushMessage($data, $post, $message);
-                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+        if ($needAssign) {
+            $dateTime = null;
+            $read = $post->timelineItems->getByType('read')->first();
+            if ($read && $read->published instanceof DateTime) {
+                $dateTime = $read->published->format('c');
             }
-            foreach ($post->responses as $message) {
-                $messageData = $this->pushMessage($data, $post, $message);
-                SensorSdcPusher::warningOnDebug(json_encode($messageData));
-            }
-
             if ($post->status->identifier === 'close') {
-                $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
-                SensorSdcPusher::debug("Close if needed");
-                $responseData = $this->client->accept($data['id'], $message);
-                SensorSdcPusher::warningOnDebug(json_encode($responseData));
-            }
-        }elseif ($pushComments === 'build-query') {
-            foreach ($post->comments as $message) {
-                $messageData = $this->buildMessageQuery($data, $post, $message);
-                SensorSdcPusher::warningOnDebug(json_encode($messageData));
-            }
-            foreach ($post->responses as $message) {
-                $messageData = $this->buildMessageQuery($data, $post, $message);
-                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+                SensorSdcPusher::debug("Assign to default office and operator if needed");
+                $this->client->assign($data['id'], $officeId, $dateTime, $operatorId);
+            } else {
+                SensorSdcPusher::debug("Assign to default office if needed");
+                $this->client->assign($data['id'], $officeId, $dateTime);
             }
         }
+
+        if ($pushComments === true) {
+//            foreach ($post->comments as $message) {
+//                $messageData = $this->pushMessage($data, $post, $message);
+//                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+//            }
+//            foreach ($post->responses as $message) {
+//                $messageData = $this->pushMessage($data, $post, $message);
+//                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+//            }
+        }
+
+        if ($post->status->identifier === 'close') {
+            $message = $post->responses->count() > 0 ? $post->responses->lastMessage->text : '';
+            SensorSdcPusher::debug("Close if needed");
+            $responseData = $this->client->accept($data['id'], $message);
+            SensorSdcPusher::warningOnDebug(json_encode($responseData));
+        }
+
+        $file = new SplFileObject('messages.csv', 'a');
+        foreach ($post->comments as $message) {
+            $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
+            $file->fputcsv(array_values($messageCsv));
+        }
+        foreach ($post->responses as $message) {
+            $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
+            $file->fputcsv(array_values($messageCsv));
+        }
+
 
 
 //        foreach ($post->privateMessages as $message){
@@ -264,12 +267,22 @@ class SensorSdcPusher
         return $data;
     }
 
-    private function buildMessageQuery(array $application, Post $post, Message $message)
+    private function buildMessageQuery(array $application, Post $post, Message $message, $operatorId)
     {
         $messageSerializer = new SdcMessageSerializer();
-        $applicationId = $application['id'];
         $data = $messageSerializer->serialize($post, $message, $this->currentPost['user']);
-        print_r($data);die();
+
+        $row = [
+            'id' => Ramsey\Uuid\Uuid::uuid4(),
+            'user_id' => $this->currentPost['user'] ?? $operatorId,
+            'pratica_id' => $application['id'],
+            'message' => $data['message'],
+            'visibility' => $data['visibility'],
+            'created_at' => $message->published,
+            'protocol_required' => false,
+        ];
+
+        return $row;
     }
 
     public function pushUser(User $user): array
