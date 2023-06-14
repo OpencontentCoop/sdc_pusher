@@ -251,11 +251,15 @@ class SensorSdcPusher
         $file = new SplFileObject('/mnt/efs/cluster-openpa/migration/sdc_pusher/messages.csv', 'a');
         foreach ($post->comments as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
-            $file->fputcsv(array_values($messageCsv), '|');
+            if (!empty($messageCsv['message'])) {
+                $file->fputcsv(array_values($messageCsv), '|');
+            }
         }
         foreach ($post->responses as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
-            $file->fputcsv(array_values($messageCsv), '|');
+            if (!empty($messageCsv['message'])) {
+                $file->fputcsv(array_values($messageCsv), '|');
+            }
         }
 
 
