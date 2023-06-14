@@ -109,6 +109,11 @@ class SdcPostSerializer
                     $address['road'] = $address['road'] . ' ' . $address['house_number'];
                 }
             }
+            $address['country'] = 'Italia';
+            $address['state'] = 'Italia';
+            $address['country_code'] = 'it';
+            $address['county'] = 'Genoa';
+            $address['city'] = 'Genova';
 
 //            if (isset($post->meta->{'DESVIA'}) && isset(isset($post->meta->{'TESTO'}))){
 //                $addressDisplayName = $road = $post->meta->{'DESVIA'} . ' ' . $post->meta->{'TESTO'};
