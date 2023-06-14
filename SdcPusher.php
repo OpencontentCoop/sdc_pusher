@@ -282,9 +282,9 @@ class SensorSdcPusher
             'protocol_required' => false,
         ];
 
-        SensorSdcPusher::warningOnDebug(json_encode($row));
         $payload = SdcPayload::fetchByIdAndType($message->id, 'csv_message');
         if (!$payload instanceof SdcPayload) {
+            SensorSdcPusher::warningOnDebug(json_encode($row));
             SdcPayload::create(
                 (string)$message->id,
                 'csv_message',
