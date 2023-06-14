@@ -286,7 +286,7 @@ try {
                     $pusher->push(
                         $item['post'],
                         $item['serviceId'],
-                        true,
+                        'build-query',
                         false,
                         $item['pdfFileRelativePath'],
                         $item['officeId'],
