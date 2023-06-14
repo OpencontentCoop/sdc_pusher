@@ -214,7 +214,7 @@ class SensorSdcPusher
             || $post->status->identifier === 'close'
             || $post->comments->count() > 0;
 
-        if ($pushComments) {
+        if ($pushComments === true) {
             if ($needAssign) {
                 $dateTime = null;
                 $read = $post->timelineItems->getByType('read')->first();
@@ -245,6 +245,15 @@ class SensorSdcPusher
                 $responseData = $this->client->accept($data['id'], $message);
                 SensorSdcPusher::warningOnDebug(json_encode($responseData));
             }
+        }elseif ($pushComments === 'build-query') {
+            foreach ($post->comments as $message) {
+                $messageData = $this->buildMessageQuery($data, $post, $message);
+                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+            }
+            foreach ($post->responses as $message) {
+                $messageData = $this->buildMessageQuery($data, $post, $message);
+                SensorSdcPusher::warningOnDebug(json_encode($messageData));
+            }
         }
 
 
@@ -253,6 +262,14 @@ class SensorSdcPusher
 //        }
 
         return $data;
+    }
+
+    private function buildMessageQuery(array $application, Post $post, Message $message)
+    {
+        $messageSerializer = new SdcMessageSerializer();
+        $applicationId = $application['id'];
+        $data = $messageSerializer->serialize($post, $message, $this->currentPost['user']);
+        print_r($data);die();
     }
 
     public function pushUser(User $user): array

@@ -293,6 +293,7 @@ try {
                         $item['operatorId']
                     );
                 }
+
             } catch (Exception $e) {
                 eZLog::write("$id " . $e->getMessage(), 'sdc_push.log');
                 if ($verbose) {
