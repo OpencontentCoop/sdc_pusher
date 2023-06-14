@@ -228,7 +228,7 @@ try {
                 $pusher->push(
                     $post,
                     $serviceId,
-                    false,
+                    'build-query',
                     $pushBinaries,
                     $pdfFileRelativePath,
                     $officeId,
@@ -286,7 +286,7 @@ try {
                     $pusher->push(
                         $item['post'],
                         $item['serviceId'],
-                        'build-query',
+                        true,
                         false,
                         $item['pdfFileRelativePath'],
                         $item['officeId'],
