@@ -133,6 +133,10 @@ class SdcPostSerializer
             ];
         }
 
+        if (!empty($userData['id'])){
+            $data['user'] = $userData['id'];
+        }
+
         return $data;
     }
 }
