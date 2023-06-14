@@ -32,7 +32,7 @@ class SdcPostSerializer
             'modified_at' => $post->modified->format('c'),
             'sensor_category' => count($post->categories) > 0 ? $post->categories[0]->name : null,
             'sensor_area' => count($post->areas) > 0 ? $post->areas[0]->name : null,
-            'micromacrocategory' => $microMacro,
+//            'micromacrocategory' => $microMacro,
             'id_v3' => $post->id,
             'uuid_v3' => $post->uuid,
         ];
@@ -102,14 +102,34 @@ class SdcPostSerializer
             );
 
             $addressDisplayName = $post->geoLocation->address;
+
+            $address = $nominatim['address'] ?? [];
+            if (isset($address['road']) && isset($address['house_number'])){
+                if (strpos($address['road'], ' ' . $address['house_number']) === false) {
+                    $address['road'] = $address['road'] . ' ' . $address['road'];
+                }
+            }
+
+//            if (isset($post->meta->{'DESVIA'}) && isset(isset($post->meta->{'TESTO'}))){
+//                $addressDisplayName = $road = $post->meta->{'DESVIA'} . ' ' . $post->meta->{'TESTO'};
+//                $address['country'] = 'Italia';
+//                $address['state'] = 'Italia';
+//                $address['country_code'] = 'it';
+//                $address['county'] = 'Genoa';
+//                $address['road'] = $road;
+//                $address['city'] = 'Genova';
+//                $address['name'] = $road;
+//            }
+
             if (stripos($addressDisplayName, 'genova') === false){
                 $addressDisplayName .= ' Genova';
             }
+
             $data["data"]["address"] = [
                 "lat" => $post->geoLocation->latitude,
                 "lon" => $post->geoLocation->longitude,
                 "display_name" => $addressDisplayName,
-                "address" => $nominatim['address'] ?? [],
+                "address" => $address,
             ];
         }
 

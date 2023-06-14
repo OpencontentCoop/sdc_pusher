@@ -1,5 +1,5 @@
 <?php
-
+// create table sdc_payload_qa as (select * from sdc_payload);
 class SdcPayload extends eZPersistentObject
 {
     public static function definition()
