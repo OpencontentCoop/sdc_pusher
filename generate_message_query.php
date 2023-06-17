@@ -29,7 +29,7 @@ $cli = eZCLI::instance();
 
 $csvFile = __DIR__ . '/application_id_map.csv';
 $options = new SQLICSVOptions([
-    'csv_path' => $csvFile,
+    'csv_path' => $csvFile, 'delimiter' => ','
 ]);
 $csvDoc = new SQLICSVDoc($options);
 $csvDoc->parse();
