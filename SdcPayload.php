@@ -110,6 +110,9 @@ class SdcPayload extends eZPersistentObject
     public static function create(string $id, string $type, array $payload, int $priority = 0): SdcPayload
     {
         $item = new SdcPayload();
+        if (mb_strlen($id) > 255){
+            $id = substr($id, 0, 255);
+        }
         $item->setAttribute('id', $id);
         $item->setAttribute('priority', $priority);
         $item->setAttribute('type', $type);

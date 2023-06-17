@@ -63,6 +63,19 @@ $slackEndpoint = $options['slack-endpoint'];
 
 //SensorSdcPusher::$categories = json_decode(file_get_contents(__DIR__ . '/categories.json'), true);
 
+$doneCsv = __DIR__ . '/done.csv';
+$doneItems = [];
+if (file_exists($doneCsv)){
+    $doneData = explode(PHP_EOL, file_get_contents($doneCsv));
+    foreach ($doneData as $item) {
+        $item = trim($item);
+        $item = trim($item, '"');
+        if ($item != 'id_v3') {
+            $doneItems[$item] = $item;
+        }
+    }
+}
+
 eZDB::setErrorHandling(eZDB::ERROR_HANDLING_EXCEPTIONS);
 try {
     $pusher = SensorSdcPusher::instance($baseUri, $username, $password);
@@ -178,6 +191,21 @@ try {
             } else {
                 $cli->output();
                 $cli->warning("$i/$objectsCount Post #" . $object['id']);
+            }
+
+            if (isset($doneItems[$object['id']])){
+                if ($verbose) {
+                    $cli->output(' - skip (done list)');
+                }
+                continue;
+            }
+
+            if (SdcPayload::fetchByIdAndType($object['id'], 'post') instanceof SdcPayload
+                || SdcPayload::fetchByIdAndType($object['id'], 'accept') instanceof SdcPayload){
+                if ($verbose) {
+                    $cli->output(' - already done');
+                }
+                continue;
             }
 
             try {
