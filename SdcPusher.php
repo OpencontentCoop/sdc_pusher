@@ -271,7 +271,7 @@ class SensorSdcPusher
         return $data;
     }
 
-    private function buildMessageQuery(array $application, Post $post, Message $message, $operatorId)
+    public function buildMessageQuery(array $application, Post $post, Message $message, $operatorId)
     {
         $payload = SdcPayload::fetchByIdAndType($message->id, 'csv_message');
         if (!$payload instanceof SdcPayload) {
