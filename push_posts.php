@@ -261,6 +261,8 @@ try {
                     $officeId,
                     $operatorId
                 );
+            }else{
+                SensorSdcPusher::debug("Working on post $post->id", false);sleep(1);
             }
             $stats++;
             eZContentObject::clearCache();
