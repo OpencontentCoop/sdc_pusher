@@ -248,17 +248,17 @@ class SensorSdcPusher
             SensorSdcPusher::warningOnDebug(json_encode($responseData));
         }
 
-//        $file = new SplFileObject('/mnt/efs/cluster-openpa/migration/sdc_pusher/messages.csv', 'a');
+        $file = new SplFileObject('/mnt/efs/cluster-openpa/migration/sdc_pusher/missing-messages.csv', 'a');
         foreach ($post->comments as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
             if (!empty($messageCsv['message'])) {
-//                $file->fputcsv(array_values($messageCsv), '|');
+                $file->fputcsv(array_values($messageCsv), '|');
             }
         }
         foreach ($post->responses as $message) {
             $messageCsv = $this->buildMessageQuery($data, $post, $message, $operatorId);
             if (!empty($messageCsv['message'])) {
-//                $file->fputcsv(array_values($messageCsv), '|');
+                $file->fputcsv(array_values($messageCsv), '|');
             }
         }
 
