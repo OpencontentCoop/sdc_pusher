@@ -66,10 +66,10 @@ $slackEndpoint = $options['slack-endpoint'];
 
 $doneItems = [];
 $csvFile = __DIR__ . '/application_id_map.csv';
-$options = new SQLICSVOptions([
+$sqliOptions = new SQLICSVOptions([
     'csv_path' => $csvFile, 'delimiter' => ','
 ]);
-$csvDoc = new SQLICSVDoc($options);
+$csvDoc = new SQLICSVDoc($sqliOptions);
 $csvDoc->parse();
 foreach ($csvDoc->rows as $row) {
     $doneItems[$row->idV3] = $row->id;
