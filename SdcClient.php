@@ -124,7 +124,7 @@ class SdcClient
     {
         $data = $this->userSerializer->serialize($user);
 
-        if ($user = $this->getUserByFiscalCode($data['codice_fiscale'])) {
+        if ($user = $this->getUserByFiscalCode(trim($data['codice_fiscale']))) {
             return $user;
         }
 
