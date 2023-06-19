@@ -27,7 +27,7 @@ $user = eZUser::fetchByName('admin');
 eZUser::setCurrentlyLoggedInUser($user, $user->attribute('contentobject_id'));
 $cli = eZCLI::instance();
 
-$csvFile = __DIR__ . '/application_id_map.csv';
+$csvFile = __DIR__ . '/application_id_map-open.csv';
 $options = new SQLICSVOptions([
     'csv_path' => $csvFile, 'delimiter' => ','
 ]);
@@ -82,8 +82,8 @@ foreach ($csvDoc->rows as $row) {
         }
     }
 }
-$export = __DIR__ . '/export_messages.csv';
-eZFile::create('export_messages.csv', __DIR__, '');
+$export = __DIR__ . '/export_messages-open.csv';
+eZFile::create('export_messages-open', __DIR__, '');
 $cli->output('Create csv');
 $fp = fopen($export, 'w');
 foreach ($rows as $fields) {
