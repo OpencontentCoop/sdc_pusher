@@ -44,11 +44,11 @@ if ($options['id']) {
     ];
 } else {
     $csvFile = __DIR__ . '/application_id_map.csv';
-    $options = new SQLICSVOptions([
+    $sqlOptions = new SQLICSVOptions([
         'csv_path' => $csvFile,
         'delimiter' => ',',
     ]);
-    $csvDoc = new SQLICSVDoc($options);
+    $csvDoc = new SQLICSVDoc($sqlOptions);
     $csvDoc->parse();
     $sourceData = $csvDoc->rows;
 }
@@ -57,6 +57,7 @@ $operator = 'SegnalaCi Genova';
 $repository = OpenPaSensorRepository::instance();
 $rows = [];
 foreach ($sourceData as $row) {
+    $cli->output('.', false);
     $post = $repository->getPostService()->loadPost((int)$row->idV3);
 
     $statusChangeTpl = [
