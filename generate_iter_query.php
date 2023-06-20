@@ -89,7 +89,7 @@ foreach ($sourceData as $row) {
         $changes[$readAt] = [
             [
                 [
-                    2000,
+                    4000,
                     array_merge($statusChangeTpl, [
                         'evento' => 'Presa in carico',
                         'operatore' => $operator,
@@ -120,7 +120,7 @@ foreach ($sourceData as $row) {
         $changes[$lastAssigned['at']] = [
             [
                 [
-                    2000,
+                    4000,
                     array_merge($statusChangeTpl, [
                         'evento' => 'Presa in carico',
                         'operatore' => $operator,
@@ -140,7 +140,7 @@ foreach ($sourceData as $row) {
         $changes[$closedAt] = [
             [
                 [
-                    2000,
+                    7000,
                     array_merge($statusChangeTpl, [
                         'evento' => 'Approvazione pratica',
                         'operatore' => $operator,
