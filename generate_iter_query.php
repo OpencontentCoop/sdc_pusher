@@ -85,7 +85,7 @@ foreach ($sourceData as $row) {
 
     $read = $post->timelineItems->getByType('read')->first();
     if ($read && $read->published instanceof DateTime) {
-        $readAt = $read->published->format('c');
+        $readAt = $read->published->format('U');
         $changes[$readAt] = [
             [
                 [
@@ -136,7 +136,7 @@ foreach ($sourceData as $row) {
 
     $closed = $post->timelineItems->getByType('closed')->last();
     if ($closed && $closed->published instanceof DateTime) {
-        $closedAt = $closed->published->format('c');
+        $closedAt = $closed->published->format('U');
         $changes[$closedAt] = [
             [
                 [
@@ -154,6 +154,7 @@ foreach ($sourceData as $row) {
     }
 
     print_r($changes);
+    echo serialize($changes);
 
 }
 
