@@ -147,8 +147,15 @@ foreach ($sourceData as $row) {
         ];
     }
 
-    print_r($changes);
-    echo serialize($changes);
+    if ($options['id']) {
+        print_r($changes);
+        echo serialize($changes);
+    }else{
+        $rows[] = [
+            'id' => $row->id,
+            'storico_stati' => serialize($changes),
+        ];
+    }
 }
 
 $export = __DIR__ . '/export_iter.csv';
