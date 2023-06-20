@@ -36,11 +36,13 @@ $user = eZUser::fetchByName('admin');
 eZUser::setCurrentlyLoggedInUser($user, $user->attribute('contentobject_id'));
 $cli = eZCLI::instance();
 
-if($options['id']){
-    $sourceData = [(object)[
-        'idV3' => $options['id']
-    ]];
-}else {
+if ($options['id']) {
+    $sourceData = [
+        (object)[
+            'idV3' => $options['id'],
+        ],
+    ];
+} else {
     $csvFile = __DIR__ . '/application_id_map.csv';
     $options = new SQLICSVOptions([
         'csv_path' => $csvFile,
@@ -72,14 +74,12 @@ foreach ($sourceData as $row) {
     $publishedAt = $post->published->format('U');
     $changes[$publishedAt] = [
         [
-            [
-                2000,
-                array_merge($statusChangeTpl, [
-                    'evento' => 'Creazione pratica da altro soggetto',
-                    'operatore' => $operator,
-                    'timestamp' => $publishedAt,
-                ]),
-            ],
+            2000,
+            array_merge($statusChangeTpl, [
+                'evento' => 'Creazione pratica da altro soggetto',
+                'operatore' => $operator,
+                'timestamp' => $publishedAt,
+            ]),
         ],
     ];
 
@@ -88,16 +88,14 @@ foreach ($sourceData as $row) {
         $readAt = $read->published->format('U');
         $changes[$readAt] = [
             [
-                [
-                    4000,
-                    array_merge($statusChangeTpl, [
-                        'evento' => 'Presa in carico',
-                        'operatore' => $operator,
-                        'user_group' => 'Ufficio Relazioni con il Pubblico',
-                        'timestamp' => $readAt,
-                        'responsabile' => $operator,
-                    ]),
-                ],
+                4000,
+                array_merge($statusChangeTpl, [
+                    'evento' => 'Presa in carico',
+                    'operatore' => $operator,
+                    'user_group' => 'Ufficio Relazioni con il Pubblico',
+                    'timestamp' => $readAt,
+                    'responsabile' => $operator,
+                ]),
             ],
         ];
     }
@@ -116,19 +114,17 @@ foreach ($sourceData as $row) {
         }
     }
 
-    if ($lastAssigned){
+    if ($lastAssigned) {
         $changes[$lastAssigned['at']] = [
             [
-                [
-                    4000,
-                    array_merge($statusChangeTpl, [
-                        'evento' => 'Presa in carico',
-                        'operatore' => $operator,
-                        'user_group' => $lastAssigned['name'],
-                        'timestamp' => $lastAssigned['at'],
-                        'responsabile' => $operator,
-                    ]),
-                ],
+                4000,
+                array_merge($statusChangeTpl, [
+                    'evento' => 'Presa in carico',
+                    'operatore' => $operator,
+                    'user_group' => $lastAssigned['name'],
+                    'timestamp' => $lastAssigned['at'],
+                    'responsabile' => $operator,
+                ]),
             ],
         ];
     }
@@ -139,23 +135,20 @@ foreach ($sourceData as $row) {
         $closedAt = $closed->published->format('U');
         $changes[$closedAt] = [
             [
-                [
-                    7000,
-                    array_merge($statusChangeTpl, [
-                        'evento' => 'Approvazione pratica',
-                        'operatore' => $operator,
-                        'user_group' => 'Ufficio Relazioni con il Pubblico',
-                        'timestamp' => $closedAt,
-                        'responsabile' => $operator,
-                    ]),
-                ],
+                7000,
+                array_merge($statusChangeTpl, [
+                    'evento' => 'Approvazione pratica',
+                    'operatore' => $operator,
+                    'user_group' => 'Ufficio Relazioni con il Pubblico',
+                    'timestamp' => $closedAt,
+                    'responsabile' => $operator,
+                ]),
             ],
         ];
     }
 
     print_r($changes);
     echo serialize($changes);
-
 }
 
 $export = __DIR__ . '/export_iter.csv';
